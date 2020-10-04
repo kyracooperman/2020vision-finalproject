@@ -1,30 +1,40 @@
 ---
-title: "projectproposal"
-output:
-  pdf_document: default
-  html_document: default
+title: "Project Proposal"
+subtitle: "2020 Vision"
+author: "Mihir Patel, Tina Xia, Leah Okamura, Kyra Cooperman"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+sanfrancrime <- 
+  read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
 ```
 
-## R Markdown
+Sanfrancisco-Crime-Dataset
+This Problem Data set of San Francisco Contains information about the crime in San Francisco, We are going to analyze the data, Visualize the data using folium maps for geographical understanding. In other words It is called Geo spatial Mapping. This Problem is the final assignment for Coursera and IBM's Data Visualization Course.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+some facts
+The overall crime rate in San Francisco is 151% higher than the national average.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+For every 100,000 people, there are 18.86 daily crimes that occur in San Francisco.
 
-```{r cars}
-summary(cars)
+San Francisco is safer than 5% of the cities in the United States.
+
+In San Francisco you have a 1 in 15 chance of becoming a victim of any crime.
+
+The number of total year over year crimes in San Francisco has not changed.
+
+
+
+In recent years, San Francs
+
+
+RQ: What factors will allow the general population of San Francisco to be 
+safest from local crime?
+
+Hypotheses: 
+
+```{r dataglimpse}
+glimpse(sanfrancrime)
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
