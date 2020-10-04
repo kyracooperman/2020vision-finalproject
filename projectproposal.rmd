@@ -11,29 +11,16 @@ sanfrancrime <-
   read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
 ```
 
-Sanfrancisco-Crime-Dataset
-This Problem Data set of San Francisco Contains information about the crime in San Francisco, We are going to analyze the data, Visualize the data using folium maps for geographical understanding. In other words It is called Geo spatial Mapping. This Problem is the final assignment for Coursera and IBM's Data Visualization Course.
+### Section 1
 
-some facts
-The overall crime rate in San Francisco is 151% higher than the national average.
+The subject matter we’re investigating is information about the crime in San Francisco. We're planning on analyzing the data and visualizing it to draw conclusions. Dataset: https://www.kaggle.com/roshansharma/sanfranciso-crime-dataset 
 
-For every 100,000 people, there are 18.86 daily crimes that occur in San Francisco.
-
-San Francisco is safer than 5% of the cities in the United States.
-
-In San Francisco you have a 1 in 15 chance of becoming a victim of any crime.
-
-The number of total year over year crimes in San Francisco has not changed.
-
-
-
-In recent years, San Francs
-
-
-RQ: What factors will allow the general population of San Francisco to be 
+Research Question: What factors will allow the general population of San Francisco to be 
 safest from local crime?
 
-Hypotheses: 
+Motivation: In recent years, San Francisco hasn't been the safest place to live; the overall crime rate in San Francisco is 151% higher than the national average. According to SFChronicle, "homicides increased by 21.4% in San Francisco from March to June of this year," compared to 2019 (https://www.sfchronicle.com/bayarea/article/Which-crimes-are-up-down-in-SF-during-15408485.php). There is a 1 in 15 chance of becoming a victim of any crime. We wanted to use this dataset to obtain conclusions about specific factors that correlate to higher levels of crime, which will hopefully inform us of some key insights we can keep during future travels.
+
+Hypotheses: A later time (e.g. nighttime hours) correlates to a higher level or rate of crime. Location is correlated to levels of crime. 
 
 ```{r dataglimpse}
 glimpse(sanfrancrime)
