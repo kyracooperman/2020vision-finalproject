@@ -22,6 +22,11 @@ Motivation: In recent years, San Francisco hasn't been the safest place to live;
 
 Hypotheses: A later time (e.g. nighttime hours) correlates to a higher level or rate of crime. Location is correlated to levels of crime. 
 
+
+### Section 2
+
+
+### Section 3
 ```{r dataglimpse}
 glimpse(sanfrancrime)
 ```
