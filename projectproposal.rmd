@@ -7,8 +7,11 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
-sanfrancrime <- 
+sanfrancrimeBIG <- 
   read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
+glimpse(sanfrancrimeBIG)
+#sanfrancrime <- sample_n(sanfrancrimeBIG, 15000) %>%
+#glimpse(sanfrancrime)
 ```
 
 ### Section 1
@@ -28,5 +31,5 @@ Hypotheses: A later time (e.g. nighttime hours) correlates to a higher level or 
 
 ### Section 3
 ```{r dataglimpse}
-glimpse(sanfrancrime)
+
 ```
