@@ -9,9 +9,6 @@ output: pdf_document
 library(tidyverse)
 sanfrancrimeBIG <- 
   read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
-glimpse(sanfrancrimeBIG)
-#sanfrancrime <- sample_n(sanfrancrimeBIG, 15000) %>%
-#glimpse(sanfrancrime)
 ```
 
 ### Section 1
@@ -78,5 +75,7 @@ creators created it.
 
 ### Section 3
 ```{r dataglimpse}
-
+#glimpse(sanfrancrimeBIG)
+#sanfrancrime <- sample_n(sanfrancrimeBIG, 15000) %>%
+#glimpse(sanfrancrime)
 ```
