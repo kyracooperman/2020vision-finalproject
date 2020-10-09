@@ -44,10 +44,12 @@ The observations in the dataset are of crime data in San Francisco from 2016. We
 found our dataset at https://www.kaggle.com/roshansharma/sanfranciso-crime-dataset. 
 Each observation in this datase is a crime whose various aspects have been 
 recorded. There were originally 150,500 individual crimes/observations in this 
-dataset. However, because of the nature of R Studio with through OIT, we will be
+dataset. However, because of the nature of R Studio through OIT, we will be
 taking a random and reproducible sample from the larger dataset. We created this
 sample by using the function sample_n() on sanfrancrimeBIG to randomly select 
-15,000 observations. 
+15,000 observations. We chose 15,000 because it is still large enough to get an 
+accurate portrayal of the total data set, yet is much more manageable to process.
+
 
 There are 13 variables in the dataset.
 
