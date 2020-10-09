@@ -13,16 +13,41 @@ sanfrancrimeBIG <-
 
 ### Section 1
 
-The subject matter we’re investigating is information about the crime in San Francisco. In recent years, San Francisco hasn't been the safest place to live; the overall crime rate in San Francisco is 151% higher than the national average. According to SFChronicle, "homicides increased by 21.4% in San Francisco from March to June of this year," compared to 2019 (https://www.sfchronicle.com/bayarea/article/Which-crimes-are-up-down-in-SF-during-15408485.php). There is a 1 in 15 chance of becoming a victim of any crime. We wanted to use this dataset to obtain conclusions about specific factors that correlate to higher levels of crime, which will hopefully inform us of some key insights we can keep during future travels.
+The subject matter we’re investigating is information about crime in San 
+Francisco. In recent years, San Francisco hasn't been the safest place to live; 
+the overall crime rate in San Francisco is 151% higher than the national 
+average. According to SFChronicle, "homicides increased by 21.4% in San 
+Francisco from March to June of this year," compared to 2019 (https://www.sfchronicle.com/bayarea/article/Which-crimes-are-up-down-in-SF-during-15408485.php). 
+There is a 1 in 15 chance of becoming a victim of any crime. We wanted to use 
+this dataset to obtain conclusions about specific factors that correlate to 
+higher levels of crime, which will hopefully inform us of some key insights we 
+can keep during future travels.
 
-Research Question: What factors will allow the general population of San Francisco to be 
-safest from local crime?
+Research Question: What factors can the general population associate with local 
+crime in order to be the safest while in San Francisco?
 
-Hypotheses: A later time (e.g. nighttime hours) correlates to a higher level or rate of crime. Location is correlated to levels of crime. 
+Hypotheses: A later time (e.g. nighttime hours) correlates to a higher level or 
+rate of crime. Location is correlated to levels of crime. 
+
+We are interested in these two hypotheses because we believe they can then lead 
+to other interesting relationships between variables within this dataset. For 
+example, if there is a strong correlation between night and rate of crime, then 
+is there a correlation between which night of the week (ex. Sunday night) and 
+rate of crime? With location, are there certain districts that have a specific 
+crime that is common there? By delving further and examining these 
+relationships, we will be able to understand if crime has any specific pattern 
+in San Francisco. 
 
 ### Section 2
 
-The observations in the dataset are of crime data in San Francisco from 2016. We found our dataset at https://www.kaggle.com/roshansharma/sanfranciso-crime-dataset. Each observation in this datase is a crime whose various aspects have been recorded. There were originally 150,500 individual crimes/observations in this dataset. However, because of the nature of R Studio with through OIT, we will be taking a random and reproducible sample from the larger dataset. We created this sample by using the function sample_n() on sanfrancrimeBIG to randomly select 15,000 observations. 
+The observations in the dataset are of crime data in San Francisco from 2016. We
+found our dataset at https://www.kaggle.com/roshansharma/sanfranciso-crime-dataset. 
+Each observation in this datase is a crime whose various aspects have been 
+recorded. There were originally 150,500 individual crimes/observations in this 
+dataset. However, because of the nature of R Studio with through OIT, we will be
+taking a random and reproducible sample from the larger dataset. We created this
+sample by using the function sample_n() on sanfrancrimeBIG to randomly select 
+15,000 observations. 
 
 There are 13 variables in the dataset.
 
@@ -40,7 +65,8 @@ Time (double): gives time of crime (in military time)
 
 PdDistrict (character): gives police district crime occurred in
 
-Resolution (character): gives kind of punishment given to the criminal to resolve the case
+Resolution (character): gives kind of punishment given to the criminal to 
+                        resolve the case
 
 Address (character): gives address where the crime happened
 
@@ -52,7 +78,12 @@ Location (character): exact location using latitude and longitude
 
 PdId (double): ID of police officer
 
-The curator of the dataset got it from the final assignment for Coursera and IBM's Data Visualization Course. The information in this dataset is most likely from the San Francisco Police Department for their reported crimes during 2016. This dataset was originally used to practice analyzing and visualizing data through geo spatial mapping by using folium maps for geographical understanding. 
+The curator of the dataset got it from the final assignment for Coursera and 
+IBM's Data Visualization Course. The information in this dataset is most likely
+directly from the San Francisco Police Department for their reported crimes 
+during 2016. This dataset was originally used to practice analyzing and 
+visualizing data through geo spatial mapping by using folium maps for 
+geographical understanding. 
 
 ### Section 3
 
