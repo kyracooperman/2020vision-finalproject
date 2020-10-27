@@ -6,25 +6,122 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+sanfrancrimeBIG <- 
+  read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
 ```
 
-## R Markdown
+### Introduction and data and methodology
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+The subject matter we’re investigating is information about crime in San 
+Francisco. In recent years, San Francisco hasn't been the safest place to live; 
+the overall crime rate in San Francisco is 151% higher than the national 
+average. According to SFChronicle, "homicides increased by 21.4% in San 
+Francisco from March to June of this year," compared to 2019 (https://www.sfchronicle.com/bayarea/article/Which-crimes-are-up-down-in-SF-during-15408485.php). 
+There is a 1 in 15 chance of becoming a victim of any crime. We wanted to use 
+this dataset to obtain conclusions about specific factors that correlate to 
+higher levels of crime, which will hopefully inform us of some key insights we 
+can keep during future travels.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Research Question: What factors can the general population associate with local 
+crime in order to be the safest while in San Francisco (or in other cities with similar characteristics)?
 
-```{r cars}
-summary(cars)
+Hypotheses: A later time (e.g. nighttime hours) correlates to a higher level or 
+rate of crime. Location is correlated to levels of crime. 
+
+We are interested in these two hypotheses because we believe they can then lead 
+to other interesting relationships between variables within this dataset. For 
+example, if there is a strong correlation between night and rate of crime, then 
+is there a correlation between which night of the week (ex. Sunday night) and 
+rate of crime? With location, are there certain districts that have a specific 
+crime that is common there? By delving further and examining these 
+relationships, we will be able to understand if crime has any specific pattern 
+in San Francisco. 
+
+The observations in the dataset are of crime data in San Francisco from 2016. We
+found our dataset at https://www.kaggle.com/roshansharma/sanfranciso-crime-dataset. 
+Each observation in this datase is a crime whose various aspects have been 
+recorded. There were originally 150,500 individual crimes/observations in this 
+dataset. However, because of the nature of R Studio through OIT, we will be
+taking a random and reproducible sample from the larger dataset. We created this
+sample by using the function sample_n() on sanfrancrimeBIG to randomly select 
+15,000 observations. We chose 15,000 because it is still large enough to get an 
+accurate portrayal of the total data set, yet is much more manageable to process.
+
+
+There are 13 variables in the dataset.
+
+IncidntNum (double): gives the Incident Number of the crime
+
+Category (character): gives category of crime
+
+Description (character): gives description of crime
+
+DayofWeek (character): gives day of week the crime occurred on
+
+Date (character): gives date (day, month, and year) of crime
+
+Time (double): gives time of crime (in military time)
+
+PdDistrict (character): gives police district crime occurred in
+
+Resolution (character): gives kind of punishment given to the criminal to 
+                        resolve the case
+
+Address (character): gives address where the crime happened
+
+X (double): gives latitude of crime location
+
+Y (double): gives longitude of crime location
+
+Location (character): exact location using latitude and longitude
+
+PdId (double): ID of police officer
+
+The curator of the dataset got it from the final assignment for Coursera and 
+IBM's Data Visualization Course. The information in this dataset is most likely
+directly from the San Francisco Police Department for their reported crimes 
+during 2016. This dataset was originally used to practice analyzing and 
+visualizing data through geo spatial mapping by using folium maps for 
+geographical understanding. 
+
+introduce and justify the statistical method(s) that you believe will be useful in answering your research question.
+
+The statistical methods we believe will be useful in answering our research question include the CLT, simulated null distributions, bootstrapping, etc. We're using these because:
+
+Grouping violence based on violent vs nonviolent.
+
+```{r dataglimpse}
+sanfrancrime <- sanfrancrimeBIG %>%
+  sample_n(15000)
+  glimpse(sanfrancrime)
 ```
 
-## Including Plots
+Variables we're considering:
+Category
+Day of Week
+Date
+Time
+PdDistrict
+Resolution
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+### Results
+Showcase how you arrived at answers to your question using any techniques we have learned in this class (and some beyond, if you’re feeling adventurous). Provide the main results from your analysis. The goal is not to do an exhaustive data analysis (i.e., do not calculate every statistic and procedure you have learned for every variable), but rather let me know that you are proficient at asking meaningful questions and answering them with results of data analysis, that you are proficient in using R, and that you are proficient at interpreting and presenting the results. Focus on methods that help you begin to answer your research questions.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Turn time into a set of ranges.
+
+Research Question: What factors can the general population associate with local 
+crime in order to be the safest while in San Francisco (or in other cities with similar characteristics)?
+
+Relationship between category and time? Mihir
+Which PD has the highest proportion of violent crime? Kyra
+Relationship between time and crime? Tina
+Day of the week and category? Leah
+
+ADD
+
+
+### Discussion
+This section is a conclusion and discussion. This will require a summary of what you have learned about your research question along with statistical arguments supporting your conclusions. Also, critique your own methods and provide suggestions for improving your analysis. Issues pertaining to the reliability and validity of your data and appropriateness of the statistical analysis should also be discussed here. A paragraph on what you would do differently if you were able to start over with the project or what you would do next if you were going to continue work on the project should also be included.
+
