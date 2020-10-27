@@ -85,9 +85,12 @@ during 2016. This dataset was originally used to practice analyzing and
 visualizing data through geo spatial mapping by using folium maps for 
 geographical understanding. 
 
-introduce and justify the statistical method(s) that you believe will be useful in answering your research question.
+introduce and justify the statistical method(s) that you believe will be useful 
+in answering your research question.
 
-The statistical methods we believe will be useful in answering our research question include the CLT, simulated null distributions, bootstrapping, etc. We're using these because:
+The statistical methods we believe will be useful in answering our research 
+question include the CLT, simulated null distributions, bootstrapping, etc. 
+We're using these because:
 
 Grouping violence based on violent vs nonviolent.
 
@@ -120,6 +123,30 @@ Relationship between time and crime? Tina
 Day of the week and category? Leah
 
 ADD etc
+
+
+
+```{r PD vs Violent Crime}
+sanfrancrime%>%
+  group_by(Category)%>%
+  count()
+sanfrancrime<- sanfrancrime%>%
+  mutate(violent_crime = case_when(
+    Category == "ASSAULT" | Category == "SEX OFFENSES FORCIBLE" | 
+      Category == "ROBBERY" | Category == "KIDNAPPING" ~ "YES",
+    Category != "ASSAULT" | Category != "SEX OFFENSES, FORCIBLE" |
+      Category != "ROBBERY" | Category !="KIDNAPPING" ~ "NO"))
+sanfrancrime%>%
+  group_by(PdDistrict)%>%
+  mutate(yes_violent = violent_crime == "YES")%>%
+  count(yes_violent)%>%
+  mutate(perc = (n/sum(n) *100))%>%
+  filter(yes_violent == TRUE)%>%
+  arrange(desc(perc))
+
+
+```
+
 
 
 ### Discussion
