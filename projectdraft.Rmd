@@ -11,7 +11,7 @@ sanfrancrimeBIG <-
   read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
 ```
 
-### Introduction and data and methodology
+### Introduction, Data and Methodology
 
 The subject matter we’re investigating is information about crime in San 
 Francisco. In recent years, San Francisco hasn't been the safest place to live; 
@@ -49,34 +49,22 @@ sample by using the function sample_n() on sanfrancrimeBIG to randomly select
 accurate portrayal of the total data set, yet is much more manageable to process.
 
 
-There are 13 variables in the dataset.
-
+There are 13 variables in the dataset:
 IncidntNum (double): gives the Incident Number of the crime
-
 Category (character): gives category of crime
-
 Description (character): gives description of crime
-
 DayofWeek (character): gives day of week the crime occurred on
-
 Date (character): gives date (day, month, and year) of crime
-
 Time (double): gives time of crime (in military time)
-
 PdDistrict (character): gives police district crime occurred in
-
 Resolution (character): gives kind of punishment given to the criminal to 
                         resolve the case
-
 Address (character): gives address where the crime happened
-
 X (double): gives latitude of crime location
-
 Y (double): gives longitude of crime location
-
 Location (character): exact location using latitude and longitude
-
 PdId (double): ID of police officer
+
 
 The curator of the dataset got it from the final assignment for Coursera and 
 IBM's Data Visualization Course. The information in this dataset is most likely
@@ -85,14 +73,11 @@ during 2016. This dataset was originally used to practice analyzing and
 visualizing data through geo spatial mapping by using folium maps for 
 geographical understanding. 
 
-introduce and justify the statistical method(s) that you believe will be useful 
-in answering your research question.
-
 The statistical methods we believe will be useful in answering our research 
 question include the CLT, simulated null distributions, bootstrapping, etc. 
-We're using these because:
+We're using these because certain variables are categorical, so they ETC ETC
 
-Grouping violence based on violent vs nonviolent.
+Note: we plan on grouping violence based on violent vs nonviolent.
 
 ```{r dataglimpse}
 sanfrancrime <- sanfrancrimeBIG %>%
