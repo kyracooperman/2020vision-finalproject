@@ -95,20 +95,25 @@ Resolution
 
 
 ### Results
-Showcase how you arrived at answers to your question using any techniques we have learned in this class (and some beyond, if you’re feeling adventurous). Provide the main results from your analysis. The goal is not to do an exhaustive data analysis (i.e., do not calculate every statistic and procedure you have learned for every variable), but rather let me know that you are proficient at asking meaningful questions and answering them with results of data analysis, that you are proficient in using R, and that you are proficient at interpreting and presenting the results. Focus on methods that help you begin to answer your research questions.
-
-Turn time into a set of ranges.
+Showcase how you arrived at answers to your question using any techniques we have learned in this class (and some beyond, if you’re feeling adventurous). Provide the main results from your analysis. The goal is not to do an exhaustive data analysis, but rather let me know that you are proficient at asking meaningful questions and answering them with results of data analysis, that you are proficient in using R, and that you are proficient at interpreting and presenting the results. Focus on methods that help you begin to answer your research questions.
 
 Research Question: What factors can the general population associate with local 
 crime in order to be the safest while in San Francisco (or in other cities with similar characteristics)?
 
 Relationship between category and time? Mihir
 Which PD has the highest proportion of violent crime? Kyra
-Relationship between time and crime? Tina
+Relationship between time and crime (ie do crimes generally occur at night)? Tina
 Day of the week and category? Leah
+ETC!
 
-ADD etc
-
+```{r time-ranges}
+sanfrancrime %>%
+  mutate(timeRanges = case_when(time <= 18 ~ '18 and under',
+              age >= 19  & age <= 25 ~ '19 - 25',
+              age >= 26  & age <= 35 ~ '26 - 35',
+              age >= 36  & age <= 50 ~ '36 - 50',
+              age >= 51  ~ '51 and over')) 
+```
 
 
 ```{r PD vs Violent Crime}
