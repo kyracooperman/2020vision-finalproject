@@ -101,6 +101,63 @@ Research Question: What factors can the general population associate with local
 crime in order to be the safest while in San Francisco (or in other cities with similar characteristics)?
 
 Relationship between category and time? Mihir
+
+```{r mihir creating time and filtering for important variables}
+important <- sanfrancrime %>%
+  mutate(str = as.character(Time)) %>%
+  mutate(hourstr = substr(str, 1, 2)) %>%
+  mutate (hour = as.numeric(hourstr)) %>% 
+  select(Category, DayOfWeek, Date, PdDistrict, Resolution, hour)
+
+important <- important %>% 
+  mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "night",
+                                hour >= 6 & hour < 12 ~ "morning",
+                                hour >= 12 & hour < 18 ~ "day",
+                                hour >= 18 & hour < 24 ~ "evening"))
+glimpse(important)
+```
+
+```{r categorize crime}
+important <- important %>% 
+  mutate(crimetype = case_when(
+    
+    Category == "BURGLARY" | Category == "LARCENY/THEFT" | 
+    Category == "STOLEN PROPERTY" | Category == "RECOVERED VEHICLE" |
+    Category == "VEHICLE THEFT" | Category == "ARSON" |
+    Category == "VANDALISM"  ~ "property related",
+    
+    Category == "ROBBERY" | Category == "ASSAULT" | 
+    Category == "KIDNAPPING" ~ "violence related",
+    
+    Category == "BRIBERY" | Category == "BAD CHECKS" | 
+    Category == "EMBEZZLEMENT"| Category == "FORGERY/COUNTERFEITING" |
+    Category == "FRAUD" | Category == "GAMBLING"| 
+    Category == "EXTORTION" ~ "money related",
+    
+    Category == "DRIVING UNDER THE INFLUENCE" | Category == "DRUG/NARCOTIC" | 
+    Category == "DRUNKENNESS"| Category == "LIQUOR LAWS" ~ "drug related",
+    
+    Category == "PORNOGRAPHY/OBSCENE MAT" | Category == "PROSTITUTION" | 
+    Category == "SEX OFFENSES, FORCIBLE"| 
+    Category == "SEX OFFENSES, NON FORCIBLE" ~ "sex related",
+
+    Category == "LOITERING" | Category == "TREA" | 
+    Category == "TRESPASS"| Category == "SUSPICIOUS OCC" |
+    Category == "DISORDERLY CONDUCT" ~ "suss related",
+
+    Category == "FAMILY OFFENSES" | Category == "MISSING PERSON" | 
+    Category == "NON-CRIMINAL"| Category == "OTHER OFFENSES" |
+    Category == "TRESPASS"| Category == "SECONDARY CODES" |
+    Category == "SUICIDE"| Category == "SECONDARY CODES" |
+    Category == "WARRANTS"| Category == "WEAPON LAWS" |
+    Category == "RUNAWAY" ~ "misc."))
+
+glimpse(important)
+```
+
+
+
+
 Which PD has the highest proportion of violent crime? Kyra
 Relationship between time and crime (ie do crimes generally occur at night)? Tina
 Day of the week and category? Leah
