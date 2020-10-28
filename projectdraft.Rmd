@@ -11,7 +11,7 @@ sanfrancrimeBIG <-
   read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
 ```
 
-### Introduction, Data and Methodology
+### Introduction & Data
 
 The subject matter we’re investigating is information about crime in San 
 Francisco. In recent years, San Francisco hasn't been the safest place to live; 
@@ -73,6 +73,8 @@ during 2016. This dataset was originally used to practice analyzing and
 visualizing data through geo spatial mapping by using folium maps for 
 geographical understanding. 
 
+### Methodology
+
 The statistical methods we believe will be useful in answering our research 
 question include the CLT, simulated null distributions, bootstrapping, etc. 
 We're using these because certain variables are categorical, so they ETC ETC
@@ -100,7 +102,14 @@ Showcase how you arrived at answers to your question using any techniques we hav
 Research Question: What factors can the general population associate with local 
 crime in order to be the safest while in San Francisco (or in other cities with similar characteristics)?
 
+
+
 Relationship between category and time? Mihir
+
+To determine the relationship between category and time, I have created 4 time 
+intervals ( morning, day, evening, and night) and categorized the crimes based 
+on the type of crime. I will then be performing a Chi-Squared test between these
+categorical variables to determine if there is any relationship between them? (is that the right explanation).
 
 ```{r mihir creating time and filtering for important variables}
 important <- sanfrancrime %>%
@@ -117,7 +126,7 @@ important <- important %>%
 glimpse(important)
 ```
 
-```{r categorize crime}
+```{r categorizing crime by type}
 important <- important %>% 
   mutate(crimetype = case_when(
     
@@ -156,6 +165,65 @@ glimpse(important)
 ```
 
 
+$H_0:$ NO relationship between the crime types created above and categories for
+time of day created above.
+
+$H_a:$ There IS a relationship between the crime types created above and 
+categories for time of day created above.
+
+$\alpha$ of 0.05
+
+```{r chi-squared time}
+crimecount <- important %>%
+  count(crimetype)
+crimecount
+test <- important %>%
+  group_by(crimetype) %>%
+  count(timerange)
+test
+
+crimestuff <- c(rep(crimecount$crimetype[1], crimecount$n[1]),
+               rep(crimecount$crimetype[2], crimecount$n[2]),
+               rep(crimecount$crimetype[3], crimecount$n[3]),
+               rep(crimecount$crimetype[4], crimecount$n[4]),
+               rep(crimecount$crimetype[5], crimecount$n[5]),
+               rep(crimecount$crimetype[6], crimecount$n[6]),
+               rep(crimecount$crimetype[7], crimecount$n[7]))
+
+timestuff <- c(
+rep(test$timerange[1], test$n[1]), rep(test$timerange[2], test$n[2]), 
+rep(test$timerange[3], test$n[3]), rep(test$timerange[4], test$n[4]),
+
+rep(test$timerange[5], test$n[5]), rep(test$timerange[6], test$n[6]), 
+rep(test$timerange[7], test$n[7]), rep(test$timerange[8], test$n[8]),
+
+rep(test$timerange[9], test$n[9]), rep(test$timerange[10], test$n[10]), 
+rep(test$timerange[11], test$n[11]), rep(test$timerange[12], test$n[12]),
+
+rep(test$timerange[13], test$n[13]), rep(test$timerange[14], test$n[14]), 
+rep(test$timerange[15], test$n[15]), rep(test$timerange[16], test$n[16]),
+
+rep(test$timerange[17], test$n[17]), rep(test$timerange[18], test$n[18]), 
+rep(test$timerange[19], test$n[19]), rep(test$timerange[20], test$n[20]),
+
+rep(test$timerange[21], test$n[21]), rep(test$timerange[22], test$n[22]), 
+rep(test$timerange[23], test$n[23]), rep(test$timerange[24], test$n[24]),
+
+rep(test$timerange[25], test$n[25]), rep(test$timerange[26], test$n[26]), 
+rep(test$timerange[27], test$n[27]), rep(test$timerange[28], test$n[28]))
+
+
+table <- table(crimestuff, timestuff)
+
+chisq.test(table)
+```
+
+The test statistic is 365.65, which has a chi squared distribution with 18
+df under $H_0$. The p-value is < 2.2e-16 which is less than the $\alpha$ 
+of 0.05. This means there is sufficient evidence to reject the null 
+hypothesis. As a result, I conclude that there is sufficient evidence to 
+suggest that at the 0.05 significance level that there is a relationship between
+the crime types created above and categories for time of day created above.
 
 
 Which PD has the highest proportion of violent crime? Kyra
