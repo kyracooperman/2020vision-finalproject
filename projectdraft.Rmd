@@ -11,7 +11,7 @@ sanfrancrimeBIG <-
   read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
 ```
 
-### Introduction & Data
+### Introduction
 
 The subject matter we’re investigating is information about crime in San 
 Francisco. In recent years, San Francisco hasn't been the safest place to live; 
@@ -22,6 +22,8 @@ There is a 1 in 15 chance of becoming a victim of any crime. We wanted to use
 this dataset to obtain conclusions about specific factors that correlate to 
 higher levels of crime, which will hopefully inform us of some key insights we 
 can keep during future travels.
+
+https://www.sfchronicle.com/bayarea/philmatier/article/SF-ranks-high-in-property-crime-while-it-ranks-14439369.php
 
 Research Question: What factors can the general population associate with local 
 crime in order to be the safest while in San Francisco (or in other cities with similar characteristics)?
@@ -38,6 +40,15 @@ crime that is common there? By delving further and examining these
 relationships, we will be able to understand if crime has any specific pattern 
 in San Francisco. 
 
+
+###Data 
+
+```{r dataglimpse}
+sanfrancrime <- sanfrancrimeBIG %>%
+  sample_n(15000)
+  glimpse(sanfrancrime)
+```
+
 The observations in the dataset are of crime data in San Francisco from 2016. We
 found our dataset at https://www.kaggle.com/roshansharma/sanfranciso-crime-dataset. 
 Each observation in this datase is a crime whose various aspects have been 
@@ -47,7 +58,6 @@ taking a random and reproducible sample from the larger dataset. We created this
 sample by using the function sample_n() on sanfrancrimeBIG to randomly select 
 15,000 observations. We chose 15,000 because it is still large enough to get an 
 accurate portrayal of the total data set, yet is much more manageable to process.
-
 
 There are 13 variables in the dataset:
 IncidntNum (double): gives the Incident Number of the crime
@@ -65,7 +75,6 @@ Y (double): gives longitude of crime location
 Location (character): exact location using latitude and longitude
 PdId (double): ID of police officer
 
-
 The curator of the dataset got it from the final assignment for Coursera and 
 IBM's Data Visualization Course. The information in this dataset is most likely
 directly from the San Francisco Police Department for their reported crimes 
@@ -81,12 +90,6 @@ We're using these because certain variables are categorical, so they ETC ETC
 
 Note: we plan on grouping violence based on violent vs nonviolent.
 
-```{r dataglimpse}
-sanfrancrime <- sanfrancrimeBIG %>%
-  sample_n(15000)
-  glimpse(sanfrancrime)
-```
-
 Variables we're considering:
 Category
 Day of Week
@@ -99,12 +102,8 @@ Resolution
 ### Results
 Showcase how you arrived at answers to your question using any techniques we have learned in this class (and some beyond, if you’re feeling adventurous). Provide the main results from your analysis. The goal is not to do an exhaustive data analysis, but rather let me know that you are proficient at asking meaningful questions and answering them with results of data analysis, that you are proficient in using R, and that you are proficient at interpreting and presenting the results. Focus on methods that help you begin to answer your research questions.
 
-Research Question: What factors can the general population associate with local 
-crime in order to be the safest while in San Francisco (or in other cities with similar characteristics)?
 
-
-
-Relationship between category and time? Mihir
+### Relationship between category and time? Mihir
 
 To determine the relationship between category and time, I have created 4 time 
 intervals ( morning, day, evening, and night) and categorized the crimes based 
@@ -161,6 +160,7 @@ important <- important %>%
     Category == "WARRANTS"| Category == "WEAPON LAWS" |
     Category == "RUNAWAY" ~ "misc."))
 
+#maybe we want to add more crime types?
 glimpse(important)
 ```
 
@@ -227,50 +227,50 @@ the crime types created above and categories for time of day created above.
 
 
 
-Relationship between time and crime (ie do crimes generally occur at night)? Tina
+### Relationship between time and crime (ie do crimes generally occur at night)? Tina
 
 Question: Are more crimes at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
 
 ```{r crimesnightSF}
-sanfrancrime <- sanfrancrime %>%
-  mutate(str = as.character(Time)) %>%
-  mutate(hourstr = substr(str, 1, 2)) %>%
-  mutate (hour = as.numeric(hourstr))
-
-sanfrancrime <- sanfrancrime %>% 
-  mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "night",
-                                hour >= 6 & hour < 12 ~ "morning",
-                                hour >= 12 & hour < 18 ~ "day",
-                                hour >= 18 & hour < 24 ~ "evening"))
-
-sanfrancrime <- sanfrancrime %>% 
-  group_by(Category) %>% 
-  summarise(count = n())
-sanfrancrime
-
-ggplot(data = sanfrancrime, aes(x = timerange, y = count)) +
-  geom_bar() + facet_grid(~Category) + labs(x = "time", y = "Count of Crimes",
-title = "SSS")
+# sanfrancrime <- sanfrancrime %>%
+#   mutate(str = as.character(Time)) %>%
+#   mutate(hourstr = substr(str, 1, 2)) %>%
+#   mutate (hour = as.numeric(hourstr))
+# 
+# sanfrancrime <- sanfrancrime %>% 
+#   mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "night",
+#                                 hour >= 6 & hour < 12 ~ "morning",
+#                                 hour >= 12 & hour < 18 ~ "day",
+#                                 hour >= 18 & hour < 24 ~ "evening"))
+# 
+# sanfrancrime <- sanfrancrime %>% 
+#   group_by(Category) %>% 
+#   summarise(count = n())
+# sanfrancrime
+# 
+# ggplot(data = sanfrancrime, aes(x = timerange, y = count)) +
+#   geom_bar() + facet_grid(~Category) + labs(x = "time", y = "Count of Crimes",
+# title = "SSS")
 
 ```
 
 
-Which PD has the highest proportion of violent crime? Kyra
+### Which PD has the highest proportion of violent crime? Kyra
 
 ETC!
 
 
 ```{r PD vs Violent Crime}
-sanfrancrime%>%
+pd_violent <- sanfrancrime%>%
   group_by(Category)%>%
   count()
-sanfrancrime<- sanfrancrime%>%
+pd_violent<- sanfrancrime%>%
   mutate(violent_crime = case_when(
     Category == "ASSAULT" | Category == "SEX OFFENSES FORCIBLE" | 
       Category == "ROBBERY" | Category == "KIDNAPPING" ~ "YES",
     Category != "ASSAULT" | Category != "SEX OFFENSES, FORCIBLE" |
       Category != "ROBBERY" | Category !="KIDNAPPING" ~ "NO"))
-important%>%
+important2 <- important%>%
   group_by(PdDistrict)%>%
   mutate(yes_violent = crimetype == "violence related")%>%
   count(yes_violent)%>%
@@ -293,13 +293,33 @@ day <- sanfrancrime%>%
   mutate(cpday = n())%>%
   select(DayOfWeek, cpday)
 day
-
 ggplot(data = day, mapping = aes(x = DayOfWeek)) +
     geom_bar()  + labs(x = "Day", y = "Count",
-      title = "Number of Crimes Per Day Suggest Equal Spread of Crime")
+      title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
+#need to change order of days of the week
 ```
 
-aa
+One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well. 
+
+```{r day and crimetype}
+crimetypeday <-important%>%
+  group_by(crimetype)%>%
+  mutate(ctcount = n())
+crimetypeday
+
+
+ggplot(data = crimetypeday, mapping = aes(y = crimetype)) +
+  geom_bar() + facet_wrap(~ DayOfWeek) +
+  labs(
+    x = "Count",
+    y = "Type of Crime",
+    title = "Type of Crime by Day Shows A Large Proportion of Crimes as Property Related or Miscellaneous")
+
+#need to fix crimetype names 
+# make miscellaneous crimes more specific?
+```
+The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
+
 
 
 ### Discussion
