@@ -299,6 +299,7 @@ ggplot(data = day, mapping = aes(x = DayOfWeek)) +
       title = "Number of Crimes Per Day Suggest Equal Spread of Crime")
 ```
 
+aa
 
 
 ### Discussion
