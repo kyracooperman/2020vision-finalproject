@@ -271,13 +271,15 @@ sanfrancrime<- sanfrancrime%>%
       Category == "ROBBERY" | Category == "KIDNAPPING" ~ "YES",
     Category != "ASSAULT" | Category != "SEX OFFENSES, FORCIBLE" |
       Category != "ROBBERY" | Category !="KIDNAPPING" ~ "NO"))
-sanfrancrime%>%
+important%>%
   group_by(PdDistrict)%>%
-  mutate(yes_violent = violent_crime == "YES")%>%
+  mutate(yes_violent = crimetype == "violence related")%>%
   count(yes_violent)%>%
   mutate(perc = (n/sum(n) *100))%>%
   filter(yes_violent == TRUE)%>%
   arrange(desc(perc))
+
+
 
 
 ```
