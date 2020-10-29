@@ -136,7 +136,8 @@ important <- important %>%
     Category == "VANDALISM"  ~ "property related",
     
     Category == "ROBBERY" | Category == "ASSAULT" | 
-    Category == "KIDNAPPING" ~ "violence related",
+    Category == "KIDNAPPING" | 
+      Category == "SEX OFFENSES, FORCIBLE" ~ "violence related",
     
     Category == "BRIBERY" | Category == "BAD CHECKS" | 
     Category == "EMBEZZLEMENT"| Category == "FORGERY/COUNTERFEITING" |
@@ -146,8 +147,7 @@ important <- important %>%
     Category == "DRIVING UNDER THE INFLUENCE" | Category == "DRUG/NARCOTIC" | 
     Category == "DRUNKENNESS"| Category == "LIQUOR LAWS" ~ "drug related",
     
-    Category == "PORNOGRAPHY/OBSCENE MAT" | Category == "PROSTITUTION" | 
-    Category == "SEX OFFENSES, FORCIBLE"| 
+    Category == "PORNOGRAPHY/OBSCENE MAT" | Category == "PROSTITUTION" |
     Category == "SEX OFFENSES, NON FORCIBLE" ~ "sex related",
 
     Category == "LOITERING" | Category == "TREA" | 
@@ -218,7 +218,7 @@ table <- table(crimestuff, timestuff)
 chisq.test(table)
 ```
 
-The test statistic is 365.65, which has a chi squared distribution with 18
+The test statistic is 359.84, which has a chi squared distribution with 18
 df under $H_0$. The p-value is < 2.2e-16 which is less than the $\alpha$ 
 of 0.05. This means there is sufficient evidence to reject the null 
 hypothesis. As a result, I conclude that there is sufficient evidence to 
