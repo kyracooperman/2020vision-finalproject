@@ -257,7 +257,6 @@ title = "SSS")
 
 Which PD has the highest proportion of violent crime? Kyra
 
-Day of the week and category? Leah
 ETC!
 
 
@@ -284,6 +283,20 @@ important%>%
 
 
 
+```
+
+### Day of the week and category? Leah
+
+```{r day of week and number of crimes}
+day <- sanfrancrime%>%
+  group_by(DayOfWeek)%>%
+  mutate(cpday = n())%>%
+  select(DayOfWeek, cpday)
+day
+
+ggplot(data = day, mapping = aes(x = DayOfWeek)) +
+    geom_bar()  + labs(x = "Day", y = "Count",
+      title = "Number of Crimes Per Day Suggest Equal Spread of Crime")
 ```
 
 
