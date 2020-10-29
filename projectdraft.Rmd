@@ -280,6 +280,8 @@ important%>%
   arrange(desc(perc))
 
 
+#make a ggplot with a stacked bar graph showing proportions##
+
 
 
 ```
