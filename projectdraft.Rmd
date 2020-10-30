@@ -232,33 +232,34 @@ the crime types created above and categories for time of day created above.
 Question: Are more crimes at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
 
 ```{r crimesnightSF}
-# sanfrancrime <- sanfrancrime %>%
-#   mutate(str = as.character(Time)) %>%
-#   mutate(hourstr = substr(str, 1, 2)) %>%
-#   mutate (hour = as.numeric(hourstr))
-# 
-# sanfrancrime <- sanfrancrime %>% 
-#   mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "night",
-#                                 hour >= 6 & hour < 12 ~ "morning",
-#                                 hour >= 12 & hour < 18 ~ "day",
-#                                 hour >= 18 & hour < 24 ~ "evening"))
-# 
-# sanfrancrime <- sanfrancrime %>% 
-#   group_by(Category) %>% 
-#   summarise(count = n())
-# sanfrancrime
-# 
-# ggplot(data = sanfrancrime, aes(x = timerange, y = count)) +
-#   geom_bar() + facet_grid(~Category) + labs(x = "time", y = "Count of Crimes",
-# title = "SSS")
+sanfrancrime <- sanfrancrime %>%
+  mutate(str = as.character(Time)) %>%
+  mutate(hourstr = substr(str, 1, 2)) %>%
+  mutate (hour = as.numeric(hourstr))
+
+sanfrancrime <- sanfrancrime %>%
+  mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "dawn",
+                                hour >= 6 & hour < 12 ~ "morning",
+                                hour >= 12 & hour < 18 ~ "afternoon",
+                                hour >= 18 & hour < 24 ~ "night"))
+
+
+ggplot(data = sanfrancrime, mapping = aes(y = timerange)) +
+  geom_bar() + facet_wrap(~ Category) + labs(
+    x = "Count",
+    y = "Time of Day",
+    title = "Relationship Between Category of Crime With Time of Day and Crime Count", subtitle = "Faceted by Category of Crime") + theme(axis.text = element_text(size = 7))
+
+sanfrancrime <- sanfrancrime %>% 
+  group_by(Category) %>% 
+  summarise(count = n())
+sanfrancrime
 
 ```
+After constructing our visualization of crime count and time, a few things are clear: first, we can see that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes, assault, and other crimes. Most crimes seem to happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
 
 
 ### Which PD has the highest proportion of violent crime? Kyra
-
-ETC!
-
 
 ```{r PD vs Violent Crime}
 pd_violent <- sanfrancrime%>%
