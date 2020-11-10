@@ -261,9 +261,9 @@ ggplot(sanfrancrime, mapping = aes(y = timerange)) +
 After constructing our visualization of crime count and time, a few things are clear: first, we can see that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes, assault, and other crimes. Most crimes seem to happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
 
 ```{r map}
-library(sf)
-data1 <- st_read("data/Police_Department_Incidents_-_Previous_Year__2016_.csv", quiet = TRUE)
-data1
+# library(sf)
+# data1 <- st_read("data/Police_Department_Incidents_-_Previous_Year__2016_.csv", quiet = TRUE)
+# data1
 
 # ggplot(data1) +
 #   geom_sf(aes(fill = voted)) +
@@ -276,7 +276,7 @@ data1
 #   labs(title = "SF data with theme and aesthetics") +
 #   theme_bw()
 ```
-
+Office hrs
 
 
 
@@ -310,8 +310,6 @@ ggplot(important, aes(x = PdDistrict, fill = yes_violent))+
   labs(title = 
          "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
        y = "Percentage of Violent Crimes", x = "Police District")
-
-
 
 
 ```
@@ -355,6 +353,7 @@ ggplot(data = crimetypeday, mapping = aes(y = crimetype)) +
 #need to fix crimetype names 
 # make miscellaneous crimes more specific?
 ```
+
 The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
 
 
