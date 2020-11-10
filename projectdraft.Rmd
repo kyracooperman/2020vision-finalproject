@@ -292,20 +292,35 @@ pd_violent<- sanfrancrime%>%
       Category == "ROBBERY" | Category == "KIDNAPPING" ~ "YES",
     Category != "ASSAULT" | Category != "SEX OFFENSES, FORCIBLE" |
       Category != "ROBBERY" | Category !="KIDNAPPING" ~ "NO"))
-important2 <- important%>%
+important <- important%>%
+  filter(PdDistrict!="NA")%>%
   group_by(PdDistrict)%>%
   mutate(yes_violent = crimetype == "violence related")%>%
+  arrange(desc(yes_violent))
+
+important%>%
+  group_by(PdDistrict)%>%
   count(yes_violent)%>%
-  mutate(perc = (n/sum(n) *100))%>%
-  filter(yes_violent == TRUE)%>%
-  arrange(desc(perc))
+  mutate(perc = (n/sum(n)*100))%>%
+  arrange(desc(perc))%>%
+  filter(yes_violent=="TRUE")
+  
+ggplot(important, aes(x = PdDistrict, fill = yes_violent))+
+  geom_bar(position = "fill") + coord_flip()+
+  labs(title = 
+         "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
+       y = "Percentage of Violent Crimes", x = "Police District")
 
-
-#make a ggplot with a stacked bar graph showing proportions##
 
 
 
 ```
+
+
+Ingleside, Mission, and Tenderloin have the highest rates of violent crime.
+However, Mission, Southern, and Bayview have the highest number of violent crimes.
+Park and Richmond both have the lowest rates and total numbers of violent crimes.
+For all police districts, the percentage of violent crimes is lower than 16%.
 
 ### Day of the week and category? Leah
 
