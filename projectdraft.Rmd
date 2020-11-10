@@ -41,7 +41,7 @@ relationships, we will be able to understand if crime has any specific pattern
 in San Francisco. 
 
 
-###Data 
+### Data 
 
 ```{r dataglimpse}
 sanfrancrime <- sanfrancrimeBIG %>%
@@ -81,6 +81,7 @@ directly from the San Francisco Police Department for their reported crimes
 during 2016. This dataset was originally used to practice analyzing and 
 visualizing data through geo spatial mapping by using folium maps for 
 geographical understanding. 
+
 
 ### Methodology
 
@@ -227,9 +228,9 @@ the crime types created above and categories for time of day created above.
 
 
 
-### Relationship between time and crime (ie do crimes generally occur at night)? Tina
+### Relationship between time and crime? Tina
 
-Question: Are more crimes at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
+Question: Do more crimes generally occur at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
 
 ```{r crimesnightSF}
 sanfrancrime <- sanfrancrime %>%
@@ -244,19 +245,39 @@ sanfrancrime <- sanfrancrime %>%
                                 hour >= 18 & hour < 24 ~ "night"))
 
 
-ggplot(data = sanfrancrime, mapping = aes(y = timerange)) +
+ggplot(sanfrancrime, mapping = aes(y = timerange)) +
   geom_bar() + facet_wrap(~ Category) + labs(
     x = "Count",
     y = "Time of Day",
     title = "Relationship Between Category of Crime With Time of Day and Crime Count", subtitle = "Faceted by Category of Crime") + theme(axis.text = element_text(size = 7))
 
-sanfrancrime <- sanfrancrime %>% 
-  group_by(Category) %>% 
-  summarise(count = n())
-sanfrancrime
+# sanfrancrime <- sanfrancrime %>% 
+#   group_by(Category) %>% 
+#   summarise(count = n())
+# sanfrancrime
 
 ```
+
 After constructing our visualization of crime count and time, a few things are clear: first, we can see that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes, assault, and other crimes. Most crimes seem to happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
+
+```{r map}
+library(sf)
+data1 <- st_read("data/Police_Department_Incidents_-_Previous_Year__2016_.csv", quiet = TRUE)
+data1
+
+# ggplot(data1) +
+#   geom_sf(aes(fill = voted)) +
+#   labs(title = "Higher population counties have more votes cast",
+#        fill = "Total number of votes cast") + 
+#   theme_bw()
+# 
+# ggplot(data1) +
+#   geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
+#   labs(title = "SF data with theme and aesthetics") +
+#   theme_bw()
+```
+
+
 
 
 ### Which PD has the highest proportion of violent crime? Kyra
@@ -325,4 +346,7 @@ The faceted bar graph shows the frequency of each crime rate on a given day of t
 
 ### Discussion
 This section is a conclusion and discussion. This will require a summary of what you have learned about your research question along with statistical arguments supporting your conclusions. Also, critique your own methods and provide suggestions for improving your analysis. Issues pertaining to the reliability and validity of your data and appropriateness of the statistical analysis should also be discussed here. A paragraph on what you would do differently if you were able to start over with the project or what you would do next if you were going to continue work on the project should also be included.
+
+
+
 
