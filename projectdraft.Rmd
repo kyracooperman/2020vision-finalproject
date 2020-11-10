@@ -171,7 +171,7 @@ time of day created above.
 
 $H_a:$ There IS a relationship between the crime types created above and 
 categories for time of day created above.
-
+ 
 $\alpha$ of 0.05
 
 ```{r chi-squared time}
