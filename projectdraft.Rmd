@@ -364,7 +364,8 @@ ggplot(data = crimetypeday, mapping = aes(y = crimetype)) +
   labs(
     x = "Count",
     y = "Type of Crime",
-    title = "Type of Crime by Day Shows A Large Proportion of Crimes as Property Related or Miscellaneous")
+    title = "Type of Crime by Day Shows A Large Proportion of Crimes as 
+    Property Related or Miscellaneous")
 
 #need to fix crimetype names 
 # make miscellaneous crimes more specific?
