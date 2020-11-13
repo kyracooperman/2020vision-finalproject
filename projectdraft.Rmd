@@ -394,7 +394,6 @@ This section is a conclusion and discussion. This will require a summary of what
 
 
 
-
 We understand that we cannot extrapolate our analysis to every city; however, our conclusions will be generalizable to similar cities to a moderate degree. Other cities with similar infrastructure and economic conditions are more likely to utilize the analysis we've found. This analysis will not be applicable to Durham, NC, for example, because of the population density and overall difference in cities (SF is a bustling city, while Durham is a smaller, quaint town).  
 
 If we were to continue work on the project, we would add to our analysis by introducing data from different cities that are comparable to SF. Common major cities that post-college students flock to include NYC and DC, among others. It would be interesting to see the parallels in crime rates, as for many college students, traveling to their first job post-grad will be their first taste of independence and financial freedom -- thus, safety is an important factor to take into consideration. We would also introduce the most populous cities from all over the world, like Shanghai or São Paulo.
