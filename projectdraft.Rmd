@@ -405,4 +405,9 @@ how can ur results inform policy decisions?
 interpret coefficients
 should look like a paper from poli sci
 
+major links to use for the map:
+https://www.benjaminsorensen.me/project/sf_police/ 
+https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
+https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
+
 
