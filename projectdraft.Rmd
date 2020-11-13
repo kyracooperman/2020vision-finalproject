@@ -7,6 +7,7 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(broom)
 sanfrancrimeBIG <- 
   read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
 ```
@@ -48,8 +49,6 @@ set.seed(1)
 sanfrancrime <- sanfrancrimeBIG %>%
   sample_n(15000)
   glimpse(sanfrancrime)
-sanfrancrime %>% 
-  count(PdDistrict)
 ```
 
 The observations in the dataset are of crime data in San Francisco from 2016. We
@@ -107,12 +106,7 @@ Resolution
 Showcase how you arrived at answers to your question using any techniques we have learned in this class (and some beyond, if you’re feeling adventurous). Provide the main results from your analysis. The goal is not to do an exhaustive data analysis, but rather let me know that you are proficient at asking meaningful questions and answering them with results of data analysis, that you are proficient in using R, and that you are proficient at interpreting and presenting the results. Focus on methods that help you begin to answer your research questions.
 
 
-### Relationship between category and time? Mihir
-
-To determine the relationship between category and time, I have created 4 time 
-intervals ( morning, day, evening, and night) and categorized the crimes based 
-on the type of crime. I will then be performing a Chi-Squared test between these
-categorical variables to determine if there is any relationship between them? (is that the right explanation).
+### Relationship between crime type and time? Mihir
 
 ```{r mihir creating time and filtering for important variables}
 important <- sanfrancrime %>%
@@ -126,7 +120,6 @@ important <- important %>%
                                 hour >= 6 & hour < 12 ~ "morning",
                                 hour >= 12 & hour < 18 ~ "day",
                                 hour >= 18 & hour < 24 ~ "evening"))
-glimpse(important)
 ```
 
 ```{r categorizing crime by type}
@@ -167,6 +160,29 @@ important <- important %>%
 glimpse(important)
 ```
 
+```{r random visualizations}
+ggplot(data = important, mapping = aes(x = timerange)) +
+  geom_bar(aes(fill = crimetype), position = "dodge") +
+  labs(x = "Time of the Day", y = "Count of Crime Type", 
+       title = "The most property crime happens in the Evening",
+       subtitle = "The most violent crime happens in the Evening",
+       fill= "Crime Type")
+
+ggplot(data = important, mapping = aes(x = DayOfWeek)) +
+  geom_bar(aes(fill = crimetype), position = "dodge") +
+  labs(x = "Day of the Week", y = "Count of Crime Type", 
+       title = "The most property crime happens on Friday",
+       subtitle = "The most violent crime happens on Saturday",
+       fill= "Crime Type")
+```
+
+
+To determine the relationship between category and time, I have created 4 time 
+intervals ( morning, day, evening, and night) and categorized the crimes based 
+on the type of crime. I will then be performing a Chi-Squared test between these
+categorical variables to determine if there is the relationship between them is 
+statistically significant.
+
 
 $H_0:$ NO relationship between the crime types created above and categories for
 time of day created above.
@@ -178,16 +194,14 @@ $\alpha$ of 0.05
 
 ```{r chi-squared time}
 
-#Table needs to be fixed
 crimecount <- important %>%
   count(crimetype)
-crimecount
+
 test <- important %>%
   group_by(crimetype) %>%
   count(timerange)
-test
 
-crimestuff <- c(rep(crimecount$crimetype[1], crimecount$n[1]),
+CrimeCategory <- c(rep(crimecount$crimetype[1], crimecount$n[1]),
                rep(crimecount$crimetype[2], crimecount$n[2]),
                rep(crimecount$crimetype[3], crimecount$n[3]),
                rep(crimecount$crimetype[4], crimecount$n[4]),
@@ -196,7 +210,7 @@ crimestuff <- c(rep(crimecount$crimetype[1], crimecount$n[1]),
                rep(crimecount$crimetype[7], crimecount$n[7]),
                rep(crimecount$crimetype[8], crimecount$n[8]))
 
-timestuff <- c(
+TimeOfDay <- c(
 rep(test$timerange[1], test$n[1]), rep(test$timerange[2], test$n[2]), 
 rep(test$timerange[3], test$n[3]), rep(test$timerange[4], test$n[4]),
 
@@ -222,7 +236,8 @@ rep(test$timerange[29], test$n[29]), rep(test$timerange[30], test$n[30]),
 rep(test$timerange[31], test$n[31]), rep(test$timerange[32], test$n[32]))
 
 
-table <- table(crimestuff, timestuff)
+table <- table(CrimeCategory, TimeOfDay)
+table
 
 chisq.test(table)
 ```
@@ -234,6 +249,21 @@ hypothesis. As a result, I conclude that there is sufficient evidence to
 suggest that at the 0.05 significance level that there is a relationship between
 the crime types created above and categories for time of day created above.
 
+```{r linear model?}
+condensed <- important %>% 
+  mutate(isViolent = ifelse(crimetype == "Violent", 1, 0)) %>% 
+  select(DayOfWeek, PdDistrict, timerange, isViolent)
+condensed
+
+mod1 <- glm(isViolent ~ DayOfWeek + timerange, data = condensed,
+  family = "binomial")
+tidy(mod1)
+```
+
+Predicted logit(p) = -2.280 + 0.077* (Mon.) + 0.127* (Tues.) + 0.035* (Wed.) +  
+0.004* (Thur.) + 0.228* (Sat.) + 0.148* (Sun.) + 
+0.137* (morning) + 0.227* (evening) + 0.608* (night)
+ 
 
 
 ### Relationship between time and crime? Tina
@@ -336,12 +366,9 @@ For all police districts, the percentage of violent crimes is lower than 16%.
 ### How does time range affect whether crimes are violent? Kyra
 
 ```{r}
-library(broom)
 mod<- lm(yes_violent~timerange, 
          data = important)
 tidy(mod)
-
-
 ```
 
 logit(p) = 0.10383 + 0.01188(evening) + 0.00227(morning) + 0.06939(night)
