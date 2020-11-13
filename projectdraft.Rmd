@@ -44,6 +44,7 @@ in San Francisco.
 ### Data 
 
 ```{r dataglimpse}
+set.seed(1)
 sanfrancrime <- sanfrancrimeBIG %>%
   sample_n(15000)
   glimpse(sanfrancrime)
@@ -133,35 +134,34 @@ important <- important %>%
     Category == "BURGLARY" | Category == "LARCENY/THEFT" | 
     Category == "STOLEN PROPERTY" | Category == "RECOVERED VEHICLE" |
     Category == "VEHICLE THEFT" | Category == "ARSON" |
-    Category == "VANDALISM"  ~ "property related",
+    Category == "VANDALISM"  ~ "Property",
     
     Category == "ROBBERY" | Category == "ASSAULT" | 
     Category == "KIDNAPPING" | 
-      Category == "SEX OFFENSES, FORCIBLE" ~ "violence related",
+      Category == "SEX OFFENSES, FORCIBLE" ~ "Violent",
     
     Category == "BRIBERY" | Category == "BAD CHECKS" | 
     Category == "EMBEZZLEMENT"| Category == "FORGERY/COUNTERFEITING" |
     Category == "FRAUD" | Category == "GAMBLING"| 
-    Category == "EXTORTION" ~ "money related",
+    Category == "EXTORTION" ~ "White Collar",
     
     Category == "DRIVING UNDER THE INFLUENCE" | Category == "DRUG/NARCOTIC" | 
-    Category == "DRUNKENNESS"| Category == "LIQUOR LAWS" ~ "drug related",
+    Category == "DRUNKENNESS"| Category == "LIQUOR LAWS" ~ "Drug/Alcohol",
     
     Category == "PORNOGRAPHY/OBSCENE MAT" | Category == "PROSTITUTION" |
-    Category == "SEX OFFENSES, NON FORCIBLE" ~ "sex related",
+    Category == "SEX OFFENSES, NON FORCIBLE" ~ "Sex",
 
     Category == "LOITERING" | Category == "TREA" | 
     Category == "TRESPASS"| Category == "SUSPICIOUS OCC" |
-    Category == "DISORDERLY CONDUCT" ~ "suss related",
+    Category == "DISORDERLY CONDUCT" ~ "Suspicious",
+    
+    Category == "WARRANTS"|Category == "WEAPON LAWS" |
+    Category == "SECONDARY CODES" ~ "Legal Violation",
 
-    Category == "FAMILY OFFENSES" | Category == "MISSING PERSON" | 
-    Category == "NON-CRIMINAL"| Category == "OTHER OFFENSES" |
-    Category == "TRESPASS"| Category == "SECONDARY CODES" |
-    Category == "SUICIDE"| Category == "SECONDARY CODES" |
-    Category == "WARRANTS"| Category == "WEAPON LAWS" |
-    Category == "RUNAWAY" ~ "misc."))
+    Category == "MISSING PERSON" |Category == "NON-CRIMINAL"|
+    Category == "OTHER OFFENSES" |Category == "SUICIDE"| 
+    Category == "FAMILY OFFENSES" | Category == "RUNAWAY" ~ "Miscellaneous"))
 
-#maybe we want to add more crime types?
 glimpse(important)
 ```
 
@@ -175,6 +175,8 @@ categories for time of day created above.
 $\alpha$ of 0.05
 
 ```{r chi-squared time}
+
+#Table needs to be fixed
 crimecount <- important %>%
   count(crimetype)
 crimecount
@@ -189,7 +191,8 @@ crimestuff <- c(rep(crimecount$crimetype[1], crimecount$n[1]),
                rep(crimecount$crimetype[4], crimecount$n[4]),
                rep(crimecount$crimetype[5], crimecount$n[5]),
                rep(crimecount$crimetype[6], crimecount$n[6]),
-               rep(crimecount$crimetype[7], crimecount$n[7]))
+               rep(crimecount$crimetype[7], crimecount$n[7]),
+               rep(crimecount$crimetype[8], crimecount$n[8]))
 
 timestuff <- c(
 rep(test$timerange[1], test$n[1]), rep(test$timerange[2], test$n[2]), 
@@ -211,7 +214,10 @@ rep(test$timerange[21], test$n[21]), rep(test$timerange[22], test$n[22]),
 rep(test$timerange[23], test$n[23]), rep(test$timerange[24], test$n[24]),
 
 rep(test$timerange[25], test$n[25]), rep(test$timerange[26], test$n[26]), 
-rep(test$timerange[27], test$n[27]), rep(test$timerange[28], test$n[28]))
+rep(test$timerange[27], test$n[27]), rep(test$timerange[28], test$n[28]),
+
+rep(test$timerange[29], test$n[29]), rep(test$timerange[30], test$n[30]), 
+rep(test$timerange[31], test$n[31]), rep(test$timerange[32], test$n[32]))
 
 
 table <- table(crimestuff, timestuff)
@@ -342,6 +348,9 @@ logit(p) = 0.10383 + 0.01188(evening) + 0.00227(morning) + 0.06939(night)
 ### Day of the week and category? Leah
 
 ```{r day of week and number of crimes}
+#library(forcats)
+#sanfrancrime <- sanfrancrime%>%
+  #mutate(DayOfWeek = factor(DayOfWeek, labels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", #"Sunday"), levels = c(0,1,2,3,4,5,6)))
 day <- sanfrancrime%>%
   group_by(DayOfWeek)%>%
   mutate(cpday = n())%>%
