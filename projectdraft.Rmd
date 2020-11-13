@@ -48,6 +48,8 @@ set.seed(1)
 sanfrancrime <- sanfrancrimeBIG %>%
   sample_n(15000)
   glimpse(sanfrancrime)
+sanfrancrime %>% 
+  count(PdDistrict)
 ```
 
 The observations in the dataset are of crime data in San Francisco from 2016. We
