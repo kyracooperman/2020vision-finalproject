@@ -249,7 +249,10 @@ ggplot(sanfrancrime, mapping = aes(y = timerange)) +
   geom_bar() + facet_wrap(~ Category) + labs(
     x = "Count",
     y = "Time of Day",
-    title = "Relationship Between Category of Crime With Time of Day and Crime Count", subtitle = "Faceted by Category of Crime") + theme(axis.text = element_text(size = 7))
+    title = "More Arceny/Theft, Assault and Non-Criminal Activity: the 
+    Relationship Between Category of Crime With Time of Day and Crime Count", 
+    subtitle = "Faceted by Category of Crime") + 
+  theme(axis.text = element_text(size = 7))
 
 # sanfrancrime <- sanfrancrime %>% 
 #   group_by(Category) %>% 
@@ -348,7 +351,8 @@ ggplot(data = crimetypeday, mapping = aes(y = crimetype)) +
   labs(
     x = "Count",
     y = "Type of Crime",
-    title = "Type of Crime by Day Shows A Large Proportion of Crimes as Property Related or Miscellaneous")
+    title = "Type of Crime by Day Shows A Large Proportion of Crimes as 
+    Property Related or Miscellaneous")
 
 #need to fix crimetype names 
 # make miscellaneous crimes more specific?
@@ -360,6 +364,14 @@ The faceted bar graph shows the frequency of each crime rate on a given day of t
 
 ### Discussion
 This section is a conclusion and discussion. This will require a summary of what you have learned about your research question along with statistical arguments supporting your conclusions. Also, critique your own methods and provide suggestions for improving your analysis. Issues pertaining to the reliability and validity of your data and appropriateness of the statistical analysis should also be discussed here. A paragraph on what you would do differently if you were able to start over with the project or what you would do next if you were going to continue work on the project should also be included.
+
+
+
+
+
+
+
+
 
 
 
