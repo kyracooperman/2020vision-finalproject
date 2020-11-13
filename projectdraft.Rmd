@@ -191,7 +191,8 @@ crimestuff <- c(rep(crimecount$crimetype[1], crimecount$n[1]),
                rep(crimecount$crimetype[4], crimecount$n[4]),
                rep(crimecount$crimetype[5], crimecount$n[5]),
                rep(crimecount$crimetype[6], crimecount$n[6]),
-               rep(crimecount$crimetype[7], crimecount$n[7]))
+               rep(crimecount$crimetype[7], crimecount$n[7]),
+               rep(crimecount$crimetype[8], crimecount$n[8]))
 
 timestuff <- c(
 rep(test$timerange[1], test$n[1]), rep(test$timerange[2], test$n[2]), 
@@ -213,7 +214,10 @@ rep(test$timerange[21], test$n[21]), rep(test$timerange[22], test$n[22]),
 rep(test$timerange[23], test$n[23]), rep(test$timerange[24], test$n[24]),
 
 rep(test$timerange[25], test$n[25]), rep(test$timerange[26], test$n[26]), 
-rep(test$timerange[27], test$n[27]), rep(test$timerange[28], test$n[28]))
+rep(test$timerange[27], test$n[27]), rep(test$timerange[28], test$n[28]),
+
+rep(test$timerange[29], test$n[29]), rep(test$timerange[30], test$n[30]), 
+rep(test$timerange[31], test$n[31]), rep(test$timerange[32], test$n[32]))
 
 
 table <- table(crimestuff, timestuff)
