@@ -336,7 +336,8 @@ important%>%
   count(yes_violent)%>%
   mutate(perc = (n/sum(n)*100))%>%
   arrange(desc(perc))%>%
-  filter(yes_violent=="TRUE")
+  filter(yes_violent=="TRUE")%>%
+  select(PdDistrict, n, perc)
   
 ggplot(important, aes(x = PdDistrict, fill = yes_violent))+
   geom_bar(position = "fill") + coord_flip()+
