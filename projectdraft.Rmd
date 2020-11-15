@@ -102,7 +102,7 @@ Resolution
 Showcase how you arrived at answers to your question using any techniques we have learned in this class (and some beyond, if you’re feeling adventurous). Provide the main results from your analysis. The goal is not to do an exhaustive data analysis, but rather let me know that you are proficient at asking meaningful questions and answering them with results of data analysis, that you are proficient in using R, and that you are proficient at interpreting and presenting the results. Focus on methods that help you begin to answer your research questions.
 
 
-### Relationship between crime type and time? Mihir
+### 1- Relationship between crime type and time? Mihir
 
 ```{r mihir creating time and filtering for important variables}
 important <- sanfrancrime %>%
@@ -262,7 +262,7 @@ Predicted logit(p) = -2.280 + 0.077* (Mon.) + 0.127* (Tues.) + 0.035* (Wed.) +
  
 
 
-### Relationship between time and crime? Tina
+### 2-  Relationship between time and crime? Tina
 
 Question: Do more crimes generally occur at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
 
@@ -308,7 +308,11 @@ Out of all the categories of crime listed, larceny/theft is mostly conducted dur
 
 
 
-### Which PD has the highest proportion of violent crime? Kyra
+The purpose of this faceted barplot is to show which police districts have the
+highest rate of crime, as well as the highest proportion of violent crimes.
+
+
+### 3- Which PD has the highest proportion of violent crime? Kyra
 
 ```{r PD vs Violent Crime}
 pd_violent <- sanfrancrime%>%
@@ -350,7 +354,15 @@ Park and Richmond both have the lowest rates and total numbers of violent crimes
 For all police districts, the percentage of violent crimes is lower than 16%.
 
 
-### How does time range affect whether crimes are violent? Kyra
+By using logistic regression, we hope to answer the question of how much more
+likely a violent crime is to occur depending on the time range of the crime
+committed. This model below shows the predicted proportion of crimes that are
+violent given the predictor of time range. The three time ranges used are
+evening, morning, and night. We hypothesize that the highest proportion of 
+violent crimes will occur at night because there are typically fewer witnesses
+at these hours. 
+
+### 4- How does time range affect whether crimes are violent? Kyra
 
 ```{r}
 mod<- lm(yes_violent~timerange, 
@@ -358,10 +370,11 @@ mod<- lm(yes_violent~timerange,
 tidy(mod)
 ```
 
-logit(p) = 0.10383 + 0.01188(evening) + 0.00227(morning) + 0.06939(night)
+logit(yes_violent) = 
+  0.10383 + 0.01188(evening) + 0.00227(morning) +0.06939(night)
 
 
-### Day of the week and category? Leah
+### 5- Day of the week and category? Leah
 
 ```{r day of week and number of crimes}
 #library(forcats)
@@ -417,6 +430,31 @@ We understand that we cannot extrapolate our analysis to every city; however, ou
 
 If we were to continue work on the project, we would add to our analysis by introducing data from different cities that are comparable to SF. It would be interesting to see the parallels in crime rates, as for many college students, traveling to their first job post-grad will be their first taste of independence and financial freedom -- thus, safety is an important factor to take into consideration. Ultimately, expanding the population of interest to citizens in multiple cities would give a better picture of how cases of crime occur differently by region, state, country, or population density (urban vs. rural). Second, we would also adjust for additional potential confounding variables to improve the accuracy of our analysis and models.
 
+#Kyra's discussion:
+
+The bar graph that shows crime rates and violent crime proportions that is 
+faceted by police districts shows valuable insight as to which police districts
+are faced with the highest crime rates. The police districts of Tenderloin, 
+Mission, and Ingleside have the highest percentages of violent crime (17.7%, 
+16.6%, 16% respectively). However, it is Bayview, Northern, and Southern that 
+have the highest total number of crimes (239, 202, 291 respectively). Park and
+Richmond were both consistent in having the lowest numbers of total crimes as
+well as violent crimes. Noting the success of these districts in maintaining low
+levels of crimes, it could be beneficial to restructure other districts to
+mirror their practices. Given that factors such as poverty level and unemployment
+rates are main drivers for crime[1], it would be valuable to assess these numbers
+for each police district. It would be valuable to know the differences in these
+factors for districts with more and less crime so that next steps can be taken
+to lower crime rates. For example, should a future study conclude that Park's
+public education system has higher test scores than that of Bayview, improving
+schools could be the best step for mitigating crime. 
+
+An important factor that this analysis is lacking is the populations of each
+police district. Having a larger population size would likely contribute to 
+greater numbers of crime, even if per capita crime is lower. This information
+is not present in the dataset we used, but would be necessary to extrapolate a
+greater conclusion regarding which police district is most dangerous.
+
 
 notes from OH:
 connect to the next level
@@ -428,4 +466,9 @@ links to use for the map:
 https://www.benjaminsorensen.me/project/sf_police/ 
 https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
 https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
+
+
+
+References:
+[1] https://ucr.fbi.gov/hate-crime/2011/resources/variables-affecting-crime 
 
