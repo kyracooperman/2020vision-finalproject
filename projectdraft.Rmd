@@ -1,5 +1,5 @@
 ---
-title: "Project Draft"
+title: "Staying Safe: Analyzing Crime in San Francisco"
 subtitle: "2020 Vision"
 author: "Mihir Patel, Tina Xia, Leah Okamura, Kyra Cooperman"
 output: pdf_document
@@ -87,11 +87,7 @@ geographical understanding.
 
 ### Methodology
 
-The statistical methods we believe will be useful in answering our research 
-question include the CLT, simulated null distributions, bootstrapping, etc. 
-We're using these because certain variables are categorical, so they ETC ETC
-
-Note: we plan on grouping violence based on violent vs nonviolent.
+We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, bootstrapping, and a logistic regression model, among others. Note: we plan on grouping violence based on violent vs nonviolent.
 
 Variables we're considering:
 Category
@@ -299,25 +295,16 @@ ggplot(sanfrancrime, mapping = aes(y = timerange)) +
 
 ```
 
-After constructing our visualization of crime count and time, a few things are clear: first, we can see that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes, assault, and other crimes. Most crimes seem to happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
+After constructing our visualization of crime count and time, a few things are clear: first, we can see that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes, assault, and other crimes. Most crimes seem to happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). 
 
-```{r map}
-# library(sf)
-# data1 <- st_read("data/Police_Department_Incidents_-_Previous_Year__2016_.csv", quiet = TRUE)
-# data1
+Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
 
-# ggplot(data1) +
-#   geom_sf(aes(fill = voted)) +
-#   labs(title = "Higher population counties have more votes cast",
-#        fill = "Total number of votes cast") + 
-#   theme_bw()
-# 
-# ggplot(data1) +
-#   geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
-#   labs(title = "SF data with theme and aesthetics") +
-#   theme_bw()
+```{r map-needs-geometry}
+ # ggplot(data1) +
+ #   geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
+ #   labs(title = "SF data with theme and aesthetics") +
+ #   theme_bw()
 ```
-Office hrs
 
 
 
@@ -421,20 +408,24 @@ This section is a conclusion and discussion. This will require a summary of what
 
 
 
+
+
+#tna's disc:
+After constructing the faceted visualization of crime count and time, we learned that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes and assault. Most crimes happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization displayed more crimes occurring during afternoons and evenings.
+
 We understand that we cannot extrapolate our analysis to every city; however, our conclusions will be generalizable to similar cities to a moderate degree. Other cities with similar infrastructure and economic conditions are more likely to utilize the analysis we've found. This analysis will not be applicable to Durham, NC, for example, because of the population density and overall difference in cities (SF is a bustling city, while Durham is a smaller, quaint town).  
 
-If we were to continue work on the project, we would add to our analysis by introducing data from different cities that are comparable to SF. Common major cities that post-college students flock to include NYC and DC, among others. It would be interesting to see the parallels in crime rates, as for many college students, traveling to their first job post-grad will be their first taste of independence and financial freedom -- thus, safety is an important factor to take into consideration. We would also introduce the most populous cities from all over the world, like Shanghai or São Paulo.
+If we were to continue work on the project, we would add to our analysis by introducing data from different cities that are comparable to SF. It would be interesting to see the parallels in crime rates, as for many college students, traveling to their first job post-grad will be their first taste of independence and financial freedom -- thus, safety is an important factor to take into consideration. Ultimately, expanding the population of interest to citizens in multiple cities would give a better picture of how cases of crime occur differently by region, state, country, or population density (urban vs. rural). Second, we would also adjust for additional potential confounding variables to improve the accuracy of our analysis and models.
 
 
 notes from OH:
 connect to the next level
 how can ur results inform policy decisions?
 interpret coefficients
-should look like a paper from poli sci
+final repo should look like a paper from poli sci
 
-major links to use for the map:
+links to use for the map:
 https://www.benjaminsorensen.me/project/sf_police/ 
 https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
 https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
-
 
