@@ -299,14 +299,33 @@ After constructing our visualization of crime count and time, a few things are c
 
 Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
 
+tried this morning - issue is it can't read the .shp file.
 ```{r map-needs-geometry}
- # ggplot(data1) +
- #   geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
- #   labs(title = "SF data with theme and aesthetics") +
- #   theme_bw()
+# library(sf)
+# sfran <- st_read("data/geo_export_75fe0c62-29fb-48d9-bf09-1b1ad4dd1d97.shp", quiet = TRUE)
+# sfran
+# 
+# ggplot(sfran) +
+#     geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
+#     labs(title = "SF data with theme and aesthetics") +
+#     theme_bw()
 ```
 
-
+```{r experimenting-tina}
+# sanfrancrime %>%
+#   unite(col = dtime, time, sep = " ") %>% 
+#   mutate(
+#     dtime = ymd_hms(dtime),
+#     hour = hour(dtime),
+#     wday = wday(dtime, label = TRUE, abbr = TRUE)
+#   ) %>% 
+#   count(hour, wday) %>% 
+#   ggplot(aes(hour, n, color = wday, group = wday)) + 
+#   geom_line() + scale_color_hue() + 
+#   theme_minimal() + 
+#   labs(
+#     x = "Hour", y = "Incidents", title = "Police incidents by day and hour")
+```
 
 The purpose of this faceted barplot is to show which police districts have the
 highest rate of crime, as well as the highest proportion of violent crimes.
@@ -424,12 +443,13 @@ This section is a conclusion and discussion. This will require a summary of what
 
 
 
-#tna's disc:
+#Tina's disc:
 After constructing the faceted visualization of crime count and time, we learned that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes and assault. Most crimes happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization displayed more crimes occurring during afternoons and evenings.
 
 We understand that we cannot extrapolate our analysis to every city; however, our conclusions will be generalizable to similar cities to a moderate degree. Other cities with similar infrastructure and economic conditions are more likely to utilize the analysis we've found. This analysis will not be applicable to Durham, NC, for example, because of the population density and overall difference in cities (SF is a bustling city, while Durham is a smaller, quaint town).  
 
-If we were to continue work on the project, we would add to our analysis by introducing data from different cities that are comparable to SF. It would be interesting to see the parallels in crime rates, as for many college students, traveling to their first job post-grad will be their first taste of independence and financial freedom -- thus, safety is an important factor to take into consideration. Ultimately, expanding the population of interest to citizens in multiple cities would give a better picture of how cases of crime occur differently by region, state, country, or population density (urban vs. rural). Second, we would also adjust for additional potential confounding variables to improve the accuracy of our analysis and models.
+If we were to continue work on the project, we would add to our analysis by introducing data from different cities that are comparable to SF. It would be interesting to see the parallels in crime rates, as for many college students, traveling to their first job post-grad will be their first taste of independence and financial freedom -- thus, safety is an important factor to take into consideration. Ultimately, expanding the population of interest to citizens in multiple cities would give a better picture of how cases of crime occur differently by region, state, country, or population density (urban vs. rural). Second, we would also adjust for additional potential confounding variables to improve the accuracy of our analysis and models. Finally, to learn more, we'd want to speak with current or past residents and police officers about their experiences. Data is a great way to create thoughtful questions but it may not provide the full or complete answer.
+
 
 #Kyra's discussion:
 
