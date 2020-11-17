@@ -233,34 +233,33 @@ highest rate of crime, as well as the highest proportion of violent crimes.
 ### 3- Which PD has the highest proportion of violent crime? Kyra
 
 ```{r PD vs Violent Crime, echo = FALSE}
-# pd_violent <- sanfrancrime%>%
-#   group_by(Category)%>%
-#   count()
-# 
-# important3 <- important
-# important3
-# 
-# important3 <- important%>%
-#   filter(PdDistrict!="NA")%>%
-#   group_by(PdDistrict)%>%
-#   mutate(yes_violent = crimetype == "Violent")%>%
-#   arrange(desc(yes_violent))
-# 
-# important2 <- important2%>%
-#   group_by(PdDistrict)%>%
-#   count(yes_violent)%>%
-#   mutate(perc = (n/sum(n)*100))%>%
-#   arrange(desc(perc))%>%
-#   filter(yes_violent=="TRUE")%>%
-#   select(PdDistrict, n, perc)
+ # pd_violent <- sanfrancrime%>%
+ #   group_by(Category)%>%
+ #   count()
 
-#important2
-  
-#ggplot(important2, aes(x = PdDistrict, fill = yes_violent))+
-  #geom_bar(position = "identity") + coord_flip()+
-  #labs(title = 
-     #    "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
-     #  y = "Percentage of Violent Crimes", x = "Police District")
+ important3 <- important
+
+ important3 <- important%>%
+   filter(PdDistrict!="NA")%>%
+   group_by(PdDistrict)%>%
+   mutate(yes_violent = crimetype == "Violent")%>%
+   arrange(desc(yes_violent))
+
+
+ important3%>%
+   group_by(PdDistrict)%>%
+   count(yes_violent)%>%
+   mutate(perc = (n/sum(n)*100))%>%
+   arrange(desc(perc))%>%
+   filter(yes_violent=="TRUE")%>%
+   select(perc, PdDistrict, n)
+ 
+
+ggplot(important3, aes(x = PdDistrict, fill = yes_violent))+
+  geom_bar(position = "fill") + coord_flip()+
+  labs(title =
+         "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
+       y = "Proportion of Violent Crimes", x = "Police District")
 
 
 ```
