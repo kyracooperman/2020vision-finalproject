@@ -10,6 +10,8 @@ library(tidyverse)
 library(broom)
 sanfrancrimeBIG <- 
   read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
 ```
 
 ### INTRODUCTION AND DATA
