@@ -104,10 +104,10 @@ important <- sanfrancrime %>%
   select(Category, DayOfWeek, Date, PdDistrict, Resolution, hour)
 
 important <- important %>% 
-  mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "night",
+  mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "dawn",
                                 hour >= 6 & hour < 12 ~ "morning",
-                                hour >= 12 & hour < 18 ~ "day",
-                                hour >= 18 & hour < 24 ~ "evening"))
+                                hour >= 12 & hour < 18 ~ "afternoon",
+                                hour >= 18 & hour < 24 ~ "night"))
 ```
 We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into varable crimetype, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous".
 ```{r categorizing crime by type, echo = FALSE}
@@ -244,18 +244,15 @@ highest rate of crime, as well as the highest proportion of violent crimes.
 pd_violent <- sanfrancrime%>%
   group_by(Category)%>%
   count()
-pd_violent<- sanfrancrime%>%
-  mutate(violent_crime = case_when(
-    Category == "ASSAULT" | Category == "SEX OFFENSES FORCIBLE" | 
-      Category == "ROBBERY" | Category == "KIDNAPPING" ~ "YES",
-    Category != "ASSAULT" | Category != "SEX OFFENSES, FORCIBLE" |
-      Category != "ROBBERY" | Category !="KIDNAPPING" ~ "NO"))
 
-important2 <- important%>%
-  filter(PdDistrict!="NA")%>%
-  group_by(PdDistrict)%>%
-  mutate(yes_violent = crimetype == "violence related")%>%
-  arrange(desc(yes_violent))
+important3 <- important
+important3
+
+# #important3 <- important%>%
+#   filter(PdDistrict!="NA")%>%
+#   group_by(PdDistrict)%>%
+#   mutate(yes_violent = crimetype == "Violent")%>%
+#   arrange(desc(yes_violent))
 
 important2 <- important2%>%
   group_by(PdDistrict)%>%
@@ -265,7 +262,7 @@ important2 <- important2%>%
   filter(yes_violent=="TRUE")%>%
   select(PdDistrict, n, perc)
 
-important2
+#important2
   
 #ggplot(important2, aes(x = PdDistrict, fill = yes_violent))+
   #geom_bar(position = "identity") + coord_flip()+
@@ -307,15 +304,6 @@ crimetypeday <-important%>%
   group_by(crimetype)%>%
   mutate(ctcount = n())
 crimetypeday
-
-
-ggplot(data = crimetypeday, mapping = aes(y = crimetype)) +
-  geom_bar() + facet_wrap(~ DayOfWeek) +
-  labs(
-    x = "Count",
-    y = "Type of Crime",
-    title = "Type of Crime by Day Shows A Large Proportion of Crimes as 
-    Property Related or Miscellaneous")
 
 #Mihir Version
 ggplot(data = important, mapping = aes(x = DayOfWeek)) +
@@ -506,10 +494,8 @@ greater conclusion regarding which police district is most dangerous.
 
 -notes from OH:
 -connect to the next level
--how can ur results inform policy decisions?
 -interpret coefficients
 -final repo should look like a paper from poli sci
--need to get rid of daytime and crimetype duplicates
 -need to change order of days of the week
 -need to add README file
 - fix important2
