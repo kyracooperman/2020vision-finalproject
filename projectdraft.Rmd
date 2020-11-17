@@ -200,18 +200,24 @@ After constructing our visualization of crime count and time, a few things are c
 Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
 
 
-tried this morning - issue is it can't read the .shp file.
 ```{r map-needs-geometry, echo = FALSE}
 library(sf)
 sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
-
-#, driver = "ESRI Shapefile")
 sfran
 
 ggplot(sfran) +
-    geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
+    geom_sf(color = "blue", size = 1.5, fill = "orange", alpha = 0.50) +
     labs(title = "SF data with theme and aesthetics") +
     theme_bw()
+
+#need to change area bc doesn't make sense rn lol
+ggplot(sfran) +
+  geom_sf(aes(fill = shape_area)) +
+  scale_fill_gradient(low = "#fff7f3", high = "#49006a") +
+  labs(title = "Certain SF counties have more crime",
+       fill = "Total number of crimes") + 
+    theme_bw()
+
 ```
 
 links to use for the map:
@@ -219,48 +225,32 @@ https://www.benjaminsorensen.me/project/sf_police/
 https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
 https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
 
-```{r experimenting-tina, echo = FALSE}
-# sanfrancrime %>%
-#   unite(col = dtime, time, sep = " ") %>% 
-#   mutate(
-#     dtime = ymd_hms(dtime),
-#     hour = hour(dtime),
-#     wday = wday(dtime, label = TRUE, abbr = TRUE)
-#   ) %>% 
-#   count(hour, wday) %>% 
-#   ggplot(aes(hour, n, color = wday, group = wday)) + 
-#   geom_line() + scale_color_hue() + 
-#   theme_minimal() + 
-#   labs(
-#     x = "Hour", y = "Incidents", title = "Police incidents by day and hour")
-```
-
 The purpose of this faceted barplot is to show which police districts have the
 highest rate of crime, as well as the highest proportion of violent crimes.
 
 ### 3- Which PD has the highest proportion of violent crime? Kyra
 
 ```{r PD vs Violent Crime, echo = FALSE}
-pd_violent <- sanfrancrime%>%
-  group_by(Category)%>%
-  count()
-
-important3 <- important
-important3
-
-# #important3 <- important%>%
+# pd_violent <- sanfrancrime%>%
+#   group_by(Category)%>%
+#   count()
+# 
+# important3 <- important
+# important3
+# 
+# important3 <- important%>%
 #   filter(PdDistrict!="NA")%>%
 #   group_by(PdDistrict)%>%
 #   mutate(yes_violent = crimetype == "Violent")%>%
 #   arrange(desc(yes_violent))
-
-important2 <- important2%>%
-  group_by(PdDistrict)%>%
-  count(yes_violent)%>%
-  mutate(perc = (n/sum(n)*100))%>%
-  arrange(desc(perc))%>%
-  filter(yes_violent=="TRUE")%>%
-  select(PdDistrict, n, perc)
+# 
+# important2 <- important2%>%
+#   group_by(PdDistrict)%>%
+#   count(yes_violent)%>%
+#   mutate(perc = (n/sum(n)*100))%>%
+#   arrange(desc(perc))%>%
+#   filter(yes_violent=="TRUE")%>%
+#   select(PdDistrict, n, perc)
 
 #important2
   
