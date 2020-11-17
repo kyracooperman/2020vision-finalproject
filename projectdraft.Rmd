@@ -202,15 +202,16 @@ Out of all the categories of crime listed, larceny/theft is mostly conducted dur
 
 tried this morning - issue is it can't read the .shp file.
 ```{r map-needs-geometry, echo = FALSE}
-#library(sf)
-#sfran <- st_read("data/geo_export_a04fb0f6-72b3-4d43-bb3a-bd3007ed4856.shp", quiet = TRUE,
-                # driver = "ESRI Shapefile")
-#sfran
+library(sf)
+sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
 
- #ggplot(sfran) +
-     #geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
-    # labs(title = "SF data with theme and aesthetics") +
-    # theme_bw()
+#, driver = "ESRI Shapefile")
+sfran
+
+ggplot(sfran) +
+    geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
+    labs(title = "SF data with theme and aesthetics") +
+    theme_bw()
 ```
 
 links to use for the map:
