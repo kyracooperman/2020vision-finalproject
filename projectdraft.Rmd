@@ -382,16 +382,27 @@ violent given the predictor of time range. The three time ranges used are
 evening, morning, and night. We hypothesize that the highest proportion of 
 violent crimes will occur at night because there are typically fewer witnesses
 at these hours. 
-```{r linear model?, echo = FALSE}
+```{r logistic model?}
 condensed <- important %>% 
   mutate(isViolent = ifelse(crimetype == "Violent", 1, 0)) %>% 
   select(DayOfWeek, PdDistrict, timerange, isViolent)
-condensed
+#condensed
 
 mod1 <- glm(isViolent ~ DayOfWeek + timerange, data = condensed,
   family = "binomial")
-tidy(mod1) 
+tidy(mod1)
+
+
+condensed2 <- important %>% 
+  mutate(isProp = ifelse(crimetype == "Property", 1, 0)) %>% 
+  select(DayOfWeek, PdDistrict, timerange, isProp)
+#condensed2
+
+mod2 <- glm(isProp ~ DayOfWeek + timerange, data = condensed2,
+  family = "binomial")
+tidy(mod2)
 ```
+
 
 
 #4- How does time range affect whether crimes are violent? Kyra
@@ -418,9 +429,18 @@ the crime types created above and categories for time of day created above.
 #Logistic Regression
 
 #Mihir
+For Violent Crime: 
+
 Predicted logit(p) = -2.280 + 0.077* (Mon.) + 0.127* (Tues.) + 0.035* (Wed.) +  
 0.004* (Thur.) + 0.228* (Sat.) + 0.148* (Sun.) + 
 0.137* (morning) + 0.227* (evening) + 0.608* (night)
+
+For Property Crime: 
+
+Predicted logit(p) = -0.417 + 0.035* (Mon.) - 0.013* (Tues.) - 0.046* (Wed.) -  
+0.193* (Thur.) + 0.045* (Sat.) + 0.093* (Sun.) - 
+0.114* (morning) + 0.396* (evening) - 0.109* (night)
+
 
 
 #Kyra
@@ -433,6 +453,27 @@ logit(yes_violent) =
 ### DISCUSSION
 
 This section is a conclusion and discussion. This will require a summary of what you have learned about your research question along with statistical arguments supporting your conclusions. Also, critique your own methods and provide suggestions for improving your analysis. Issues pertaining to the reliability and validity of your data and appropriateness of the statistical analysis should also be discussed here. A paragraph on what you would do differently if you were able to start over with the project or what you would do next if you were going to continue work on the project should also be included.
+
+
+#mihir's discussion:
+After creating the the categoroical variables for time of day and also creating 
+categorizing the types of crime within larger categories, we determined that
+there was a statistically significant relationship between the time of day and
+type of crime. As a result, I created a logistic model to calculate the log-odds 
+of whether a violent crime occured with the predictors of day of the week and 
+time of day. I also created a model for with the same predictors for a property 
+crime.
+
+This model cannot be applied to all cities but the base concept should remain 
+the same. Most cities will have liekly have crime peak during the night and during
+the weekends because more people will not be home.
+
+I think if I were to continue to working the project I would likely break down
+the model to apply it specific districts By doing so, the characteristics 
+of these individual districts could be identified. Hopefully, these 
+charactersitics allow us to potentially apply these models to districts with
+similar population density, population breakdown, etc.
+
 
 
 #Tina's disc:
