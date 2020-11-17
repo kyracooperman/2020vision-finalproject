@@ -12,26 +12,35 @@ sanfrancrimeBIG <-
   read_csv("data/Police_Department_Incidents_-_Previous_Year__2016_.csv")
 ```
 
-### Introduction
+### INTRODUCTION AND DATA
 
-The subject matter we’re investigating is information about crime in San 
-Francisco. In recent years, San Francisco hasn't been the safest place to live; 
-the overall crime rate in San Francisco is 151% higher than the national 
-average. According to SFChronicle, "homicides increased by 21.4% in San 
-Francisco from March to June of this year," compared to 2019 (https://www.sfchronicle.com/bayarea/article/Which-crimes-are-up-down-in-SF-during-15408485.php). 
-There is a 1 in 15 chance of becoming a victim of any crime. We wanted to use 
-this dataset to obtain conclusions about specific factors that correlate to 
-higher levels of crime, which will hopefully inform us of some key insights we 
-can keep during future travels.
 
-https://www.sfchronicle.com/bayarea/philmatier/article/SF-ranks-high-in-property-crime-while-it-ranks-14439369.php
+San Francisco is a city known for its strong economy and booming tech industry. 
+In addition to Silicon Valley and San Jose, the Bay Area is home to many
+powerful companies such as Google, Tesla, Apple, and Cisco. Because of these 
+many benefits, San Francisco is a popular destination for college graduates. In 
+May 2020, San Francisco was ranked second as the best metro area for recent 
+graduates. This especially took into consideration the "high wages, work from 
+home ability, and a (mainly) pandemic-resilient economy" that many recent 
+graduates worry about during this time [4]. 
 
-Research Question: What factors can the general population associate with local 
-crime in order to be the safest while in San Francisco (or in other cities with similar characteristics)?
+However, with an overall crime rate in San Francisco that is 151% higher than 
+the national average, is it also important to note that in recent years, San 
+Francisco has not been the safest place to live. The SFChronicle reported that 
+compared to 2019, "homicides increased by 21.4% in San Francisco from March to 
+June of this year,"[2]. There is a 1 in 15 chance of becoming a victim of any 
+type of crime. A quick search about travel in San Francisco includes many 
+articles listing the "Places to Avoid After Dark" or "Most Dangerous 
+Neighborhoods in SF."With the a high possibility of any of us moving to San 
+Francisco after our time at Duke,and the recent popularity with college 
+graduates, we wanted to analyze this dataset to obtain conclusions about 
+specific factors that correlate to higher levels of crime, which will could 
+then inform us of some key insights we can keep during future travels or moves. 
 
-Hypotheses: A later time (e.g. nighttime hours) correlates to a higher level or 
-rate of crime. Location is correlated to levels of crime. 
-
+Through our research, we plan to investigate what factors the general population
+can associate with local crime in order to be the safest while in San Francisco.
+Our main hypotheses are 1) a later time (e.g. nighttime hours) correlates to a 
+higher level or rate of crime and 2) Location is correlated to levels of crime. 
 We are interested in these two hypotheses because we believe they can then lead 
 to other interesting relationships between variables within this dataset. For 
 example, if there is a strong correlation between night and rate of crime, then 
@@ -41,10 +50,7 @@ crime that is common there? By delving further and examining these
 relationships, we will be able to understand if crime has any specific pattern 
 in San Francisco. 
 
-
-### Data 
-
-```{r dataglimpse}
+```{r dataglimpse, echo = FALSE}
 set.seed(1)
 sanfrancrime <- sanfrancrimeBIG %>%
   sample_n(15000)
@@ -53,7 +59,7 @@ sanfrancrime <- sanfrancrimeBIG %>%
 
 The observations in the dataset are of crime data in San Francisco from 2016. We
 found our dataset at https://www.kaggle.com/roshansharma/sanfranciso-crime-dataset. 
-Each observation in this datase is a crime whose various aspects have been 
+Each observation in this dataset is a crime whose various aspects have been 
 recorded. There were originally 150,500 individual crimes/observations in this 
 dataset. However, because of the nature of R Studio through OIT, we will be
 taking a random and reproducible sample from the larger dataset. We created this
@@ -99,12 +105,10 @@ Resolution
 
 
 ### Results
-Showcase how you arrived at answers to your question using any techniques we have learned in this class (and some beyond, if you’re feeling adventurous). Provide the main results from your analysis. The goal is not to do an exhaustive data analysis, but rather let me know that you are proficient at asking meaningful questions and answering them with results of data analysis, that you are proficient in using R, and that you are proficient at interpreting and presenting the results. Focus on methods that help you begin to answer your research questions.
-
 
 ### 1- Relationship between crime type and time? Mihir
 
-```{r mihir creating time and filtering for important variables}
+```{r mihir creating time and filtering for important variables, echo = FALSE}
 important <- sanfrancrime %>%
   mutate(str = as.character(Time)) %>%
   mutate(hourstr = substr(str, 1, 2)) %>%
@@ -118,7 +122,7 @@ important <- important %>%
                                 hour >= 18 & hour < 24 ~ "evening"))
 ```
 
-```{r categorizing crime by type}
+```{r categorizing crime by type, echo = FALSE}
 important <- important %>% 
   mutate(crimetype = case_when(
     
@@ -156,7 +160,7 @@ important <- important %>%
 glimpse(important)
 ```
 
-```{r random visualizations}
+```{r random visualizations, echo = FALSE}
 ggplot(data = important, mapping = aes(x = timerange)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
   labs(x = "Time of the Day", y = "Count of Crime Type", 
@@ -171,7 +175,6 @@ ggplot(data = important, mapping = aes(x = DayOfWeek)) +
        subtitle = "The most violent crime happens on Saturday",
        fill= "Crime Type")
 ```
-
 
 To determine the relationship between category and time, I have created 4 time 
 intervals ( morning, day, evening, and night) and categorized the crimes based 
@@ -188,7 +191,7 @@ categories for time of day created above.
  
 $\alpha$ of 0.05
 
-```{r chi-squared time}
+```{r chi-squared time, echo = FALSE}
 
 crimecount <- important %>%
   count(crimetype)
@@ -245,7 +248,7 @@ hypothesis. As a result, I conclude that there is sufficient evidence to
 suggest that at the 0.05 significance level that there is a relationship between
 the crime types created above and categories for time of day created above.
 
-```{r linear model?}
+```{r linear model?, echo = FALSE}
 condensed <- important %>% 
   mutate(isViolent = ifelse(crimetype == "Violent", 1, 0)) %>% 
   select(DayOfWeek, PdDistrict, timerange, isViolent)
@@ -266,7 +269,7 @@ Predicted logit(p) = -2.280 + 0.077* (Mon.) + 0.127* (Tues.) + 0.035* (Wed.) +
 
 Question: Do more crimes generally occur at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
 
-```{r crimesnightSF}
+```{r crimesnightSF, echo = FALSE}
 sanfrancrime <- sanfrancrime %>%
   mutate(str = as.character(Time)) %>%
   mutate(hourstr = substr(str, 1, 2)) %>%
@@ -300,7 +303,7 @@ After constructing our visualization of crime count and time, a few things are c
 Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
 
 tried this morning - issue is it can't read the .shp file.
-```{r map-needs-geometry}
+```{r map-needs-geometry, echo = FALSE}
 # library(sf)
 # sfran <- st_read("data/geo_export_75fe0c62-29fb-48d9-bf09-1b1ad4dd1d97.shp", quiet = TRUE)
 # sfran
@@ -311,7 +314,7 @@ tried this morning - issue is it can't read the .shp file.
 #     theme_bw()
 ```
 
-```{r experimenting-tina}
+```{r experimenting-tina, echo = FALSE}
 # sanfrancrime %>%
 #   unite(col = dtime, time, sep = " ") %>% 
 #   mutate(
@@ -333,7 +336,7 @@ highest rate of crime, as well as the highest proportion of violent crimes.
 
 ### 3- Which PD has the highest proportion of violent crime? Kyra
 
-```{r PD vs Violent Crime}
+```{r PD vs Violent Crime, echo = FALSE}
 pd_violent <- sanfrancrime%>%
   group_by(Category)%>%
   count()
@@ -384,7 +387,7 @@ at these hours.
 
 ### 4- How does time range affect whether crimes are violent? Kyra
 
-```{r}
+```{r, echo = FALSE}
 mod<- lm(yes_violent~timerange, 
          data = important)
 tidy(mod)
@@ -396,7 +399,7 @@ logit(yes_violent) =
 
 ### 5- Day of the week and category? Leah
 
-```{r day of week and number of crimes}
+```{r day of week and number of crimes, echo = FALSE}
 #library(forcats)
 #sanfrancrime <- sanfrancrime%>%
   #mutate(DayOfWeek = factor(DayOfWeek, labels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", #"Sunday"), levels = c(0,1,2,3,4,5,6)))
@@ -413,7 +416,7 @@ ggplot(data = day, mapping = aes(x = DayOfWeek)) +
 
 One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well. 
 
-```{r day and crimetype}
+```{r day and crimetype, echo = FALSE}
 crimetypeday <-important%>%
   group_by(crimetype)%>%
   mutate(ctcount = n())
@@ -490,6 +493,13 @@ https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1
 
 
 
-References:
+### References
+
 [1] https://ucr.fbi.gov/hate-crime/2011/resources/variables-affecting-crime 
+
+[2] https://www.sfchronicle.com/bayarea/article/Which-crimes-are-up-down-in-SF-during-15408485.php
+
+[3] https://www.sfchronicle.com/bayarea/philmatier/article/SF-ranks-high-in-property-crime-while-it-ranks-14439369.php
+
+[4]https://poetsandquantsforundergrads.com/2020/05/15/are-these-the-50-best-metro-areas-for-recent-college-grads/
 
