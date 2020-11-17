@@ -507,4 +507,4 @@ greater conclusion regarding which police district is most dangerous.
 -final repo should look like a paper from poli sci
 -need to get rid of daytime and crimetype duplicates
 -need to change order of days of the week
-
+-need to add README file
