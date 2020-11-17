@@ -411,7 +411,7 @@ condensed
 
 mod1 <- glm(isViolent ~ DayOfWeek + timerange, data = condensed,
   family = "binomial")
-tidy(mod1)
+tidy(mod1) 
 ```
 
 
