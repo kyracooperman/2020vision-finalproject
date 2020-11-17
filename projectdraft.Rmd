@@ -91,23 +91,11 @@ visualizing data through geo spatial mapping by using folium maps for
 geographical understanding. 
 
 
-### Methodology
+### METHODOLOGY
 
-We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, bootstrapping, and a logistic regression model, among others. Note: we plan on grouping violence based on violent vs nonviolent.
+### Variables
 
-Variables we're considering:
-Category
-Day of Week
-Date
-Time
-PdDistrict
-Resolution
-
-
-### Results
-
-### 1- Relationship between crime type and time? Mihir
-
+We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, bootstrapping, and a logistic regression model, among others. Note: we plan on grouping violence based on violent vs nonviolent. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening."
 ```{r mihir creating time and filtering for important variables, echo = FALSE}
 important <- sanfrancrime %>%
   mutate(str = as.character(Time)) %>%
@@ -121,7 +109,7 @@ important <- important %>%
                                 hour >= 12 & hour < 18 ~ "day",
                                 hour >= 18 & hour < 24 ~ "evening"))
 ```
-
+We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into varable crimetype, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous".
 ```{r categorizing crime by type, echo = FALSE}
 important <- important %>% 
   mutate(crimetype = case_when(
@@ -160,6 +148,10 @@ important <- important %>%
 glimpse(important)
 ```
 
+### Visualizations
+
+### 1- Relationship between crime type and time? Mihir
+
 ```{r random visualizations, echo = FALSE}
 ggplot(data = important, mapping = aes(x = timerange)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
@@ -168,6 +160,160 @@ ggplot(data = important, mapping = aes(x = timerange)) +
        subtitle = "The most violent crime happens in the Evening",
        fill= "Crime Type")
 
+```
+
+
+###2 - Relationship between time and crime? Tina
+
+Question: Do more crimes generally occur at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
+
+```{r crimesnightSF, echo = FALSE}
+sanfrancrime <- sanfrancrime %>%
+  mutate(str = as.character(Time)) %>%
+  mutate(hourstr = substr(str, 1, 2)) %>%
+  mutate (hour = as.numeric(hourstr))
+
+sanfrancrime <- sanfrancrime %>%
+  mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "dawn",
+                                hour >= 6 & hour < 12 ~ "morning",
+                                hour >= 12 & hour < 18 ~ "afternoon",
+                                hour >= 18 & hour < 24 ~ "night"))
+
+
+ggplot(sanfrancrime, mapping = aes(y = timerange)) +
+  geom_bar() + facet_wrap(~ Category) + labs(
+    x = "Count",
+    y = "Time of Day",
+    title = "More Arceny/Theft, Assault and Non-Criminal Activity: the 
+    Relationship Between Category of Crime With Time of Day and Crime Count", 
+    subtitle = "Faceted by Category of Crime") + 
+  theme(axis.text = element_text(size = 7))
+
+# sanfrancrime <- sanfrancrime %>% 
+#   group_by(Category) %>% 
+#   summarise(count = n())
+# sanfrancrime
+
+```
+After constructing our visualization of crime count and time, a few things are clear: first, we can see that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes, assault, and other crimes. Most crimes seem to happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). 
+
+Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
+
+
+tried this morning - issue is it can't read the .shp file.
+```{r map-needs-geometry, echo = FALSE}
+# library(sf)
+# sfran <- st_read("data/geo_export_75fe0c62-29fb-48d9-bf09-1b1ad4dd1d97.shp", quiet = TRUE)
+# sfran
+# 
+# ggplot(sfran) +
+#     geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
+#     labs(title = "SF data with theme and aesthetics") +
+#     theme_bw()
+```
+
+links to use for the map:
+https://www.benjaminsorensen.me/project/sf_police/ 
+https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
+https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
+
+```{r experimenting-tina, echo = FALSE}
+# sanfrancrime %>%
+#   unite(col = dtime, time, sep = " ") %>% 
+#   mutate(
+#     dtime = ymd_hms(dtime),
+#     hour = hour(dtime),
+#     wday = wday(dtime, label = TRUE, abbr = TRUE)
+#   ) %>% 
+#   count(hour, wday) %>% 
+#   ggplot(aes(hour, n, color = wday, group = wday)) + 
+#   geom_line() + scale_color_hue() + 
+#   theme_minimal() + 
+#   labs(
+#     x = "Hour", y = "Incidents", title = "Police incidents by day and hour")
+```
+
+The purpose of this faceted barplot is to show which police districts have the
+highest rate of crime, as well as the highest proportion of violent crimes.
+
+### 3- Which PD has the highest proportion of violent crime? Kyra
+
+```{r PD vs Violent Crime, echo = FALSE}
+pd_violent <- sanfrancrime%>%
+  group_by(Category)%>%
+  count()
+pd_violent<- sanfrancrime%>%
+  mutate(violent_crime = case_when(
+    Category == "ASSAULT" | Category == "SEX OFFENSES FORCIBLE" | 
+      Category == "ROBBERY" | Category == "KIDNAPPING" ~ "YES",
+    Category != "ASSAULT" | Category != "SEX OFFENSES, FORCIBLE" |
+      Category != "ROBBERY" | Category !="KIDNAPPING" ~ "NO"))
+important2 <- important%>%
+  filter(PdDistrict!="NA")%>%
+  group_by(PdDistrict)%>%
+  mutate(yes_violent = crimetype == "violence related")%>%
+  arrange(desc(yes_violent))
+
+
+important2%>%
+  group_by(PdDistrict)%>%
+  count(yes_violent)%>%
+  mutate(perc = (n/sum(n)*100))%>%
+  arrange(desc(perc))%>%
+  filter(yes_violent=="TRUE")%>%
+  select(PdDistrict, n, perc)
+  
+ggplot(important2, aes(x = PdDistrict, fill = yes_violent))+
+  geom_bar(position = "fill") + coord_flip()+
+  labs(title = 
+         "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
+       y = "Percentage of Violent Crimes", x = "Police District")
+
+
+```
+
+
+Ingleside, Mission, and Tenderloin have the highest rates of violent crime.
+However, Mission, Southern, and Bayview have the highest number of violent crimes.
+Park and Richmond both have the lowest rates and total numbers of violent crimes.
+For all police districts, the percentage of violent crimes is lower than 16%.
+
+
+### 5- Day of the week and category? Leah
+
+```{r day of week and number of crimes, echo = FALSE}
+library(forcats)
+#sanfrancrime <- sanfrancrime%>%
+  #mutate(DayOfWeek = factor(DayOfWeek, labels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
+                            #levels = c(0,1,2,3,4,5,6)))
+day <- sanfrancrime%>%
+  group_by(DayOfWeek)%>%
+  mutate(cpday = n())%>%
+  select(DayOfWeek, cpday)
+day
+ggplot(data = day, mapping = aes(x = DayOfWeek)) +
+    geom_bar()  + labs(x = "Day", y = "Count",
+      title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
+```
+
+One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well. 
+
+```{r day and crimetype, echo = FALSE}
+crimetypeday <-important%>%
+  group_by(crimetype)%>%
+  mutate(ctcount = n())
+crimetypeday
+
+
+ggplot(data = crimetypeday, mapping = aes(y = crimetype)) +
+  geom_bar() + facet_wrap(~ DayOfWeek) +
+  labs(
+    x = "Count",
+    y = "Type of Crime",
+    title = "Type of Crime by Day Shows A Large Proportion of Crimes as 
+    Property Related or Miscellaneous")
+
+#Mihir Version
 ggplot(data = important, mapping = aes(x = DayOfWeek)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
   labs(x = "Day of the Week", y = "Count of Crime Type", 
@@ -176,12 +322,15 @@ ggplot(data = important, mapping = aes(x = DayOfWeek)) +
        fill= "Crime Type")
 ```
 
-To determine the relationship between category and time, I have created 4 time 
-intervals ( morning, day, evening, and night) and categorized the crimes based 
-on the type of crime. I will then be performing a Chi-Squared test between these
+The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
+
+
+#Chi-Square Test
+
+#Mihir
+We will be performing a Chi-Squared test between these
 categorical variables to determine if there is the relationship between them is 
 statistically significant.
-
 
 $H_0:$ NO relationship between the crime types created above and categories for
 time of day created above.
@@ -241,13 +390,16 @@ table
 chisq.test(table)
 ```
 
-The test statistic is 359.84, which has a chi squared distribution with 18
-df under $H_0$. The p-value is < 2.2e-16 which is less than the $\alpha$ 
-of 0.05. This means there is sufficient evidence to reject the null 
-hypothesis. As a result, I conclude that there is sufficient evidence to 
-suggest that at the 0.05 significance level that there is a relationship between
-the crime types created above and categories for time of day created above.
+#Logistic Regression
 
+#Mihir
+By using logistic regression, we hope to answer the question of how much more
+likely a violent crime is to occur depending on the time range of the crime
+committed. This model below shows the predicted proportion of crimes that are
+violent given the predictor of time range. The three time ranges used are
+evening, morning, and night. We hypothesize that the highest proportion of 
+violent crimes will occur at night because there are typically fewer witnesses
+at these hours. 
 ```{r linear model?, echo = FALSE}
 condensed <- important %>% 
   mutate(isViolent = ifelse(crimetype == "Violent", 1, 0)) %>% 
@@ -259,191 +411,46 @@ mod1 <- glm(isViolent ~ DayOfWeek + timerange, data = condensed,
 tidy(mod1)
 ```
 
-Predicted logit(p) = -2.280 + 0.077* (Mon.) + 0.127* (Tues.) + 0.035* (Wed.) +  
-0.004* (Thur.) + 0.228* (Sat.) + 0.148* (Sun.) + 
-0.137* (morning) + 0.227* (evening) + 0.608* (night)
- 
 
-
-### 2-  Relationship between time and crime? Tina
-
-Question: Do more crimes generally occur at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
-
-```{r crimesnightSF, echo = FALSE}
-sanfrancrime <- sanfrancrime %>%
-  mutate(str = as.character(Time)) %>%
-  mutate(hourstr = substr(str, 1, 2)) %>%
-  mutate (hour = as.numeric(hourstr))
-
-sanfrancrime <- sanfrancrime %>%
-  mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "dawn",
-                                hour >= 6 & hour < 12 ~ "morning",
-                                hour >= 12 & hour < 18 ~ "afternoon",
-                                hour >= 18 & hour < 24 ~ "night"))
-
-
-ggplot(sanfrancrime, mapping = aes(y = timerange)) +
-  geom_bar() + facet_wrap(~ Category) + labs(
-    x = "Count",
-    y = "Time of Day",
-    title = "More Arceny/Theft, Assault and Non-Criminal Activity: the 
-    Relationship Between Category of Crime With Time of Day and Crime Count", 
-    subtitle = "Faceted by Category of Crime") + 
-  theme(axis.text = element_text(size = 7))
-
-# sanfrancrime <- sanfrancrime %>% 
-#   group_by(Category) %>% 
-#   summarise(count = n())
-# sanfrancrime
-
-```
-
-After constructing our visualization of crime count and time, a few things are clear: first, we can see that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes, assault, and other crimes. Most crimes seem to happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). 
-
-Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
-
-tried this morning - issue is it can't read the .shp file.
-```{r map-needs-geometry, echo = FALSE}
-# library(sf)
-# sfran <- st_read("data/geo_export_75fe0c62-29fb-48d9-bf09-1b1ad4dd1d97.shp", quiet = TRUE)
-# sfran
-# 
-# ggplot(sfran) +
-#     geom_sf(color = "green", size = 1.5, fill = "orange", alpha = 0.50) +
-#     labs(title = "SF data with theme and aesthetics") +
-#     theme_bw()
-```
-
-```{r experimenting-tina, echo = FALSE}
-# sanfrancrime %>%
-#   unite(col = dtime, time, sep = " ") %>% 
-#   mutate(
-#     dtime = ymd_hms(dtime),
-#     hour = hour(dtime),
-#     wday = wday(dtime, label = TRUE, abbr = TRUE)
-#   ) %>% 
-#   count(hour, wday) %>% 
-#   ggplot(aes(hour, n, color = wday, group = wday)) + 
-#   geom_line() + scale_color_hue() + 
-#   theme_minimal() + 
-#   labs(
-#     x = "Hour", y = "Incidents", title = "Police incidents by day and hour")
-```
-
-The purpose of this faceted barplot is to show which police districts have the
-highest rate of crime, as well as the highest proportion of violent crimes.
-
-
-### 3- Which PD has the highest proportion of violent crime? Kyra
-
-```{r PD vs Violent Crime, echo = FALSE}
-pd_violent <- sanfrancrime%>%
-  group_by(Category)%>%
-  count()
-pd_violent<- sanfrancrime%>%
-  mutate(violent_crime = case_when(
-    Category == "ASSAULT" | Category == "SEX OFFENSES FORCIBLE" | 
-      Category == "ROBBERY" | Category == "KIDNAPPING" ~ "YES",
-    Category != "ASSAULT" | Category != "SEX OFFENSES, FORCIBLE" |
-      Category != "ROBBERY" | Category !="KIDNAPPING" ~ "NO"))
-important <- important%>%
-  filter(PdDistrict!="NA")%>%
-  group_by(PdDistrict)%>%
-  mutate(yes_violent = crimetype == "violence related")%>%
-  arrange(desc(yes_violent))
-
-
-important%>%
-  group_by(PdDistrict)%>%
-  count(yes_violent)%>%
-  mutate(perc = (n/sum(n)*100))%>%
-  arrange(desc(perc))%>%
-  filter(yes_violent=="TRUE")%>%
-  select(PdDistrict, n, perc)
-  
-ggplot(important, aes(x = PdDistrict, fill = yes_violent))+
-  geom_bar(position = "fill") + coord_flip()+
-  labs(title = 
-         "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
-       y = "Percentage of Violent Crimes", x = "Police District")
-
-
-```
-
-
-Ingleside, Mission, and Tenderloin have the highest rates of violent crime.
-However, Mission, Southern, and Bayview have the highest number of violent crimes.
-Park and Richmond both have the lowest rates and total numbers of violent crimes.
-For all police districts, the percentage of violent crimes is lower than 16%.
-
-
-By using logistic regression, we hope to answer the question of how much more
-likely a violent crime is to occur depending on the time range of the crime
-committed. This model below shows the predicted proportion of crimes that are
-violent given the predictor of time range. The three time ranges used are
-evening, morning, and night. We hypothesize that the highest proportion of 
-violent crimes will occur at night because there are typically fewer witnesses
-at these hours. 
-
-### 4- How does time range affect whether crimes are violent? Kyra
+#4- How does time range affect whether crimes are violent? Kyra
 
 ```{r, echo = FALSE}
 mod<- lm(yes_violent~timerange, 
-         data = important)
+         data = important2)
 tidy(mod)
 ```
 
+
+### RESULTS
+
+#Chi-Square Test
+
+The test statistic is 359.84, which has a chi squared distribution with 18
+df under $H_0$. The p-value is < 2.2e-16 which is less than the $\alpha$ 
+of 0.05. This means there is sufficient evidence to reject the null 
+hypothesis. As a result, I conclude that there is sufficient evidence to 
+suggest that at the 0.05 significance level that there is a relationship between
+the crime types created above and categories for time of day created above.
+
+
+#Logistic Regression
+
+#Mihir
+Predicted logit(p) = -2.280 + 0.077* (Mon.) + 0.127* (Tues.) + 0.035* (Wed.) +  
+0.004* (Thur.) + 0.228* (Sat.) + 0.148* (Sun.) + 
+0.137* (morning) + 0.227* (evening) + 0.608* (night)
+
+
+#Kyra
 logit(yes_violent) = 
   0.10383 + 0.01188(evening) + 0.00227(morning) +0.06939(night)
 
 
-### 5- Day of the week and category? Leah
-
-```{r day of week and number of crimes, echo = FALSE}
-#library(forcats)
-#sanfrancrime <- sanfrancrime%>%
-  #mutate(DayOfWeek = factor(DayOfWeek, labels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", #"Sunday"), levels = c(0,1,2,3,4,5,6)))
-day <- sanfrancrime%>%
-  group_by(DayOfWeek)%>%
-  mutate(cpday = n())%>%
-  select(DayOfWeek, cpday)
-day
-ggplot(data = day, mapping = aes(x = DayOfWeek)) +
-    geom_bar()  + labs(x = "Day", y = "Count",
-      title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
-#need to change order of days of the week
-```
-
-One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well. 
-
-```{r day and crimetype, echo = FALSE}
-crimetypeday <-important%>%
-  group_by(crimetype)%>%
-  mutate(ctcount = n())
-crimetypeday
 
 
-ggplot(data = crimetypeday, mapping = aes(y = crimetype)) +
-  geom_bar() + facet_wrap(~ DayOfWeek) +
-  labs(
-    x = "Count",
-    y = "Type of Crime",
-    title = "Type of Crime by Day Shows A Large Proportion of Crimes as 
-    Property Related or Miscellaneous")
+### DISCUSSION
 
-#need to fix crimetype names 
-# make miscellaneous crimes more specific?
-```
-
-The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
-
-
-
-### Discussion
 This section is a conclusion and discussion. This will require a summary of what you have learned about your research question along with statistical arguments supporting your conclusions. Also, critique your own methods and provide suggestions for improving your analysis. Issues pertaining to the reliability and validity of your data and appropriateness of the statistical analysis should also be discussed here. A paragraph on what you would do differently if you were able to start over with the project or what you would do next if you were going to continue work on the project should also be included.
-
-
-
 
 
 #Tina's disc:
@@ -480,20 +487,7 @@ is not present in the dataset we used, but would be necessary to extrapolate a
 greater conclusion regarding which police district is most dangerous.
 
 
-notes from OH:
-connect to the next level
-how can ur results inform policy decisions?
-interpret coefficients
-final repo should look like a paper from poli sci
-
-links to use for the map:
-https://www.benjaminsorensen.me/project/sf_police/ 
-https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
-https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
-
-
-
-### References
+### REFERENCES
 
 [1] https://ucr.fbi.gov/hate-crime/2011/resources/variables-affecting-crime 
 
@@ -502,4 +496,15 @@ https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1
 [3] https://www.sfchronicle.com/bayarea/philmatier/article/SF-ranks-high-in-property-crime-while-it-ranks-14439369.php
 
 [4]https://poetsandquantsforundergrads.com/2020/05/15/are-these-the-50-best-metro-areas-for-recent-college-grads/
+
+
+### NOTES
+
+-notes from OH:
+-connect to the next level
+-how can ur results inform policy decisions?
+-interpret coefficients
+-final repo should look like a paper from poli sci
+-need to get rid of daytime and crimetype duplicates
+-need to change order of days of the week
 
