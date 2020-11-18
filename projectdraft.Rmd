@@ -52,6 +52,12 @@ crime that is common there? By delving further and examining these
 relationships, we will be able to understand if crime has any specific pattern 
 in San Francisco. 
 
+In order to assess these hypotheses, we will look at the following relationships:
+  1. Relationship between crime type and time
+  2. Relationship between crime and time
+  3. Relationship between violent crimes and police district
+  4. Relationship between days of the week and crime
+
 ```{r dataglimpse}
 set.seed(1)
 sanfrancrime <- sanfrancrimeBIG %>%
