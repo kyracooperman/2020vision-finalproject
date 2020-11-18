@@ -69,22 +69,6 @@ sample by using the function sample_n() on sanfrancrimeBIG to randomly select
 15,000 observations. We chose 15,000 because it is still large enough to get an 
 accurate portrayal of the total data set, yet is much more manageable to process.
 
-There are 13 variables in the dataset:
-IncidntNum (double): gives the Incident Number of the crime
-Category (character): gives category of crime
-Description (character): gives description of crime
-DayofWeek (character): gives day of week the crime occurred on
-Date (character): gives date (day, month, and year) of crime
-Time (double): gives time of crime (in military time)
-PdDistrict (character): gives police district crime occurred in
-Resolution (character): gives kind of punishment given to the criminal to 
-                        resolve the case
-Address (character): gives address where the crime happened
-X (double): gives latitude of crime location
-Y (double): gives longitude of crime location
-Location (character): exact location using latitude and longitude
-PdId (double): ID of police officer
-
 The curator of the dataset got it from the final assignment for Coursera and 
 IBM's Data Visualization Course. The information in this dataset is most likely
 directly from the San Francisco Police Department for their reported crimes 
@@ -189,7 +173,7 @@ ggplot(sanfrancrime, mapping = aes(y = timerange)) +
     title = "More Arceny/Theft, Assault and Non-Criminal Activity: the 
     Relationship Between Category of Crime With Time of Day and Crime Count", 
     subtitle = "Faceted by Category of Crime") + 
-  theme(axis.text = element_text(size = 7))
+  theme(axis.text = element_text(size = 6))
 
 # sanfrancrime <- sanfrancrime %>% 
 #   group_by(Category) %>% 
@@ -386,22 +370,33 @@ $\alpha$ of 0.05
 
 ```{r crime_daylight_or_nighttime}
 test_sanfrancrime <- important %>%
-  mutate(weektype = case_when(DayOfWeek == "Saturday" ||
-                              DayOfWeek == "Sunday" ~ "Weekend",
-                              DayOfWeek == "Monday" ||
-                              DayOfWeek == "Tuesday" ||
-                              DayOfWeek == "Wednesday" ||
-                              DayOfWeek == "Thursday" ||
-                              DayOfWeek == "Friday" ~ "Weekday"))
-test_sanfrancrime
+  mutate(weektype = ifelse(DayOfWeek == "Saturday" | DayOfWeek == "Sunday", "Weekend", "Weekday"),
+         timerange = ifelse(hour >= 7 | hour < 19, "Nighttime", "Daylight"))
 
+library(forcats)
+test_sanfrancrime <- test_sanfrancrime%>%
+  mutate(weekytype = factor(weektype, levels = c("Weekend","Weektype")))
 
-# t.test(timerange ~ weektype,
+test_sanfrancrime <- test_sanfrancrime%>%
+  mutate(timerange = factor(timerange, levels = c("Nighttime","Daylight")))
+
+# t.test(weektype ~ timerange,
 #   data = test_sanfrancrime,
 #   mu = 0,
 #   var.equal = FALSE,
 #   alternative = "greater",
 #   conf.level = 0.95)
+
+
+# test_sanfrancrime <- test_sanfrancrime%>%
+#   filter(weektype == "Weekend")%>%
+#   mutate(weekend_hour = hour)
+# #test_sanfrancrime$weekend_hour
+# 
+# test_sanfrancrime <- test_sanfrancrime%>%
+#   filter(weektype == "Weekday")%>%
+#   mutate(weekday_hour = hour)
+# #test_sanfrancrime$weekday_hour
 ```
 
 
