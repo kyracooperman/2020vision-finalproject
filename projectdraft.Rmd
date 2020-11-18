@@ -52,7 +52,7 @@ crime that is common there? By delving further and examining these
 relationships, we will be able to understand if crime has any specific pattern 
 in San Francisco. 
 
-```{r dataglimpse, echo = FALSE}
+```{r dataglimpse}
 set.seed(1)
 sanfrancrime <- sanfrancrimeBIG %>%
   sample_n(15000)
@@ -98,7 +98,7 @@ geographical understanding.
 ### Variables
 
 We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, bootstrapping, and a logistic regression model, among others. Note: we plan on grouping violence based on violent vs nonviolent. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening."
-```{r mihir creating time and filtering for important variables, echo = FALSE}
+```{r mihir creating time and filtering for important variables}
 important <- sanfrancrime %>%
   mutate(str = as.character(Time)) %>%
   mutate(hourstr = substr(str, 1, 2)) %>%
@@ -112,7 +112,7 @@ important <- important %>%
                                 hour >= 18 & hour < 24 ~ "night"))
 ```
 We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into varable crimetype, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous".
-```{r categorizing crime by type, echo = FALSE}
+```{r categorizing crime by type}
 important <- important %>% 
   mutate(crimetype = case_when(
     
@@ -154,7 +154,7 @@ glimpse(important)
 
 ### 1- Relationship between crime type and time? Mihir
 
-```{r random visualizations, echo = FALSE}
+```{r random visualizations}
 ggplot(data = important, mapping = aes(x = timerange)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
   labs(x = "Time of the Day", y = "Count of Crime Type", 
@@ -169,7 +169,7 @@ ggplot(data = important, mapping = aes(x = timerange)) +
 
 Question: Do more crimes generally occur at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
 
-```{r crimesnightSF, echo = FALSE}
+```{r crimesnightSF}
 sanfrancrime <- sanfrancrime %>%
   mutate(str = as.character(Time)) %>%
   mutate(hourstr = substr(str, 1, 2)) %>%
@@ -202,7 +202,7 @@ After constructing our visualization of crime count and time, a few things are c
 Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
 
 
-```{r map-needs-geometry, echo = FALSE}
+```{r map-needs-geometry}
 library(sf)
 sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
 sfran
@@ -227,7 +227,7 @@ highest rate of crime, as well as the highest proportion of violent crimes.
 
 ### 3- Which PD has the highest proportion of violent crime? Kyra
 
-```{r PD vs Violent Crime, echo = FALSE}
+```{r PD vs Violent Crime}
  # pd_violent <- sanfrancrime%>%
  #   group_by(Category)%>%
  #   count()
@@ -269,11 +269,10 @@ For all police districts, the percentage of violent crimes is lower than 18%.
 
 ### 5- Day of the week and category? Leah
 
-```{r day of week and number of crimes, echo = FALSE}
+```{r day of week and number of crimes}
 library(forcats)
-sanfrancrime <- sanfrancrime%>%
-  mutate(DayOfWeek = factor(DayOfWeek, labels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"),levels = c(0,1,2,3,4,5,6)))
-
+sanfrancrime$DayOfWeek <- factor(sanfrancrime$DayOfWeek, levels= c("Sunday", "Monday", 
+    "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
 day <- sanfrancrime%>%
   group_by(DayOfWeek)%>%
   mutate(cpday = n())%>%
@@ -286,13 +285,14 @@ ggplot(data = day, mapping = aes(x = DayOfWeek)) +
 
 One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well. 
 
-```{r day and crimetype, echo = FALSE}
+```{r day and crimetype}
+important$DayOfWeek <- factor(important$DayOfWeek, levels= c("Sunday", "Monday", 
+    "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
 crimetypeday <-important%>%
   group_by(crimetype)%>%
   mutate(ctcount = n())
 crimetypeday
 
-#Mihir Version
 ggplot(data = important, mapping = aes(x = DayOfWeek)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
   labs(x = "Day of the Week", y = "Count of Crime Type", 
@@ -308,7 +308,7 @@ The faceted bar graph shows the frequency of each crime rate on a given day of t
 
 #Mihir
 We will be performing a Chi-Squared test between these
-categorical variables to determine if there is the relationship between them is 
+crime types and categorical time of day to determine if there is the relationship between them is 
 statistically significant.
 
 $H_0:$ NO relationship between the crime types created above and categories for
@@ -319,7 +319,7 @@ categories for time of day created above.
  
 $\alpha$ of 0.05
 
-```{r chi-squared time, echo = FALSE}
+```{r chi-squared time}
 
 crimecount <- important %>%
   count(crimetype)
@@ -369,6 +369,43 @@ table
 chisq.test(table)
 ```
 
+#T Test
+
+Given the significant p-value of our chi-square test statistic. We decided to conduct a hypothesis test to see how number of total crimes in San Francisco compares during the daylight and nightime.
+
+We will now use the CLT to perform inference because the observations are 
+independently selected and in this case, the sample size is large enough (n>30) 
+for the CLT to apply. We are using t-distribution because we are testing a 
+single sample's population mean and we don't know the true population SD.
+
+$H_0:$ The true mean time of crimes committed during the week is equal to the true mean time of crimes committed during the weekend
+
+$H_a:$ The true mean time of crimes committed during the week is less than true mean time of crimes committed during the weekend
+
+$\alpha$ of 0.05
+
+```{r crime_daylight_or_nighttime}
+test_sanfrancrime <- important %>%
+  mutate(weektype = case_when(DayOfWeek == "Saturday" ||
+                              DayOfWeek == "Sunday" ~ "Weekend",
+                              DayOfWeek == "Monday" ||
+                              DayOfWeek == "Tuesday" ||
+                              DayOfWeek == "Wednesday" ||
+                              DayOfWeek == "Thursday" ||
+                              DayOfWeek == "Friday" ~ "Weekday"))
+test_sanfrancrime
+
+# t.test(pacu30min_throatPain ~ treat,
+#   data = tpafter30_2,
+#   mu = 0,
+#   var.equal = FALSE,
+#   alternative = "greater",
+#   conf.level = 0.95)
+```
+
+
+
+
 #Logistic Regression
 
 #Mihir
@@ -379,7 +416,7 @@ violent given the predictor of time range. The three time ranges used are
 evening, morning, and night. We hypothesize that the highest proportion of 
 violent crimes will occur at night because there are typically fewer witnesses
 at these hours. 
-```{r logistic model?}
+```{r logistic model}
 condensed <- important %>% 
   mutate(isViolent = ifelse(crimetype == "Violent", 1, 0)) %>% 
   select(DayOfWeek, PdDistrict, timerange, isViolent)
@@ -534,3 +571,5 @@ greater conclusion regarding which police district is most dangerous.
 -need to change order of days of the week
 -need to add README file
 - fix important2
+- Mihir logistic regression - why only 3 time ranges 
+- need to add coefficients 
