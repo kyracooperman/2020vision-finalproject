@@ -209,20 +209,15 @@ sfran
 
 ggplot(sfran) +
     geom_sf(color = "blue", size = 1.5, fill = "orange", alpha = 0.50) +
-    labs(title = "SF data with theme and aesthetics") +
+    labs(title = "Current Police Districts in San Francisco Singled Out on a Map") +
     theme_bw()
 
-#need to change area bc doesn't make sense rn lol
-ggplot(sfran) +
-  geom_sf(aes(fill = shape_area)) +
-  scale_fill_gradient(low = "#fff7f3", high = "#49006a") +
-  labs(title = "Certain SF counties have more crime",
-       fill = "Total number of crimes") + 
-    theme_bw()
+plot(sfran)
+plot(sfran["shape_area"], key.pos = 4, main = "Areas of SF Districts Colored by Size")
 
 ```
 
-links to use for the map:
+links to use for map:
 https://www.benjaminsorensen.me/project/sf_police/ 
 https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
 https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
@@ -444,6 +439,9 @@ Predicted logit(p) = -0.417 + 0.035* (Mon.) - 0.013* (Tues.) - 0.046* (Wed.) -
 0.114* (morning) + 0.396* (evening) - 0.109* (night)
 
 
+#YUE: add quickly that we checked all conditions for regression, satisfied all conditions.
+
+
 
 #Kyra
 Predicted logit(yes_violent) = 
@@ -480,6 +478,8 @@ similar population density, population breakdown, etc.
 
 #Tina's disc:
 After constructing the faceted visualization of crime count and time, we learned that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes and assault. Most crimes happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization displayed more crimes occurring during afternoons and evenings.
+
+From a policy standpoint, government leaders in San Francisco should consider having additional police on duty during the times when crime is more eminent (afternoon and night). Another course of action could be to simply hire more police trained in Arceny, Theft, and Assault, as they were the most prominent from the faceted graph.
 
 We understand that we cannot extrapolate our analysis to every city; however, our conclusions will be generalizable to similar cities to a moderate degree. Other cities with similar infrastructure and economic conditions are more likely to utilize the analysis we've found. This analysis will not be applicable to Durham, NC, for example, because of the population density and overall difference in cities (SF is a bustling city, while Durham is a smaller, quaint town).  
 
