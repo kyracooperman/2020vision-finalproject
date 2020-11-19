@@ -96,7 +96,7 @@ important <- sanfrancrime %>%
   mutate(hourstr = substr(str, 1, 2)) %>%
   mutate (hour = as.numeric(hourstr)) %>% 
   mutate(month = as.numeric(substr(Date, 1, 2))) %>% 
-  select(Category, DayOfWeek, Date, PdDistrict, Resolution, hour, month)
+  select(Category, DayOfWeek, Date, PdDistrict, Resolution, hour, month, X, Y)
 
 important <- important %>% 
   mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "dawn",
@@ -155,13 +155,20 @@ important <- important %>%
 ```{r map-of-SF}
 library(sf)
 sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
+sfran
+ggplot(sfran) +
+    geom_sf(color = "black", size = .5, fill = "#F5F2D0") +
+    # labs(title = "Current Police Districts in San Francisco Singled Out on a Map") +
+    # theme_bw()+
+  geom_point(data = important, aes(x = X, y = Y, color = crimetype) ,alpha = 0.5, size = .7)
 
-# ggplot(sfran) +
-#     geom_sf(color = "blue", size = 1.5, fill = "orange", alpha = 0.50) +
-#     labs(title = "Current Police Districts in San Francisco Singled Out on a Map") +
-#     theme_bw()
+# ggplot(data = important, aes(x = X, y = Y, color = crimetype))+
+  # geom_point(data = important, aes(x = X, y = Y, color = crimetype) ,alpha = 0.5, size = .5)
 
-plot(sfran["district"], key.pos = 4, key.width = lcm(5), key.length = 1.0, main = "SF Police Districts") 
+plot(sfran["district"], key.pos = 4, key.width = lcm(5), key.length = 1.0,
+     main = "SF Police Districts")
+ggplot(data = important, aes(x = X, y = Y, color = crimetype))+
+  geom_point(alpha = 0.5, size = .5)
 #plot(sfran["shape_area"], key.pos = 4, main = "Areas of SF Districts Colored by Size")
 
 ```
@@ -435,8 +442,6 @@ tidy(mod2)
 ```
 
 
-
-
 $H_0$: Predicted target has the SAME likelihood of violent crime occuring than
 the sample population.
 
@@ -444,7 +449,6 @@ $H_a$: Predicted target has a GREATER likelihood of violent crime occuring than
 the sample population.
 
 $\alpha$ of 0.05    
-
 
 ```{r another attempted t-test}
 pls <- important %>% 
