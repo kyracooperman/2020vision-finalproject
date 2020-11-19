@@ -336,8 +336,6 @@ chisq.test(table)
 
 # Logistic Regression
 
-# Mihir
-
 By using logistic regression, we hope to answer the question of how much more
 likely a violent crime is to occur depending on the time range of the crime
 committed. This model below shows the predicted proportion of crimes that are
@@ -369,24 +367,27 @@ mod2 <- glm(isProp ~ DayOfWeek + timerange, data = condensed2,
 tidy(mod2)
 ```
 
-### Hypothesis Tests
+# Hypothesis Tests
 
 We will now use the CLT to perform inference because the observations are 
 independently selected and in this case, the sample size is large enough (n>30) 
 for the CLT to apply. We are using t-distribution because we are testing a 
 single sample's population mean and we don't know the true population SD.
 
-$H_0$: Predicted target has the SAME likelihood of violent crime occuring than
+
+### Number One 
+
+$H_0$: Predicted target has the SAME likelihood of violent crime occurring than
 the sample population.
 
-$H_a$: Predicted target has a GREATER likelihood of violent crime occuring than
+$H_a$: Predicted target has a GREATER likelihood of violent crime occurring than
 the sample population.
 
 $\alpha$ of 0.05    
 
-```{r another attempted t-test}
+```{r violent crime predicted target t-test}
 pls <- important %>% 
-  mutate(targeted= ifelse(DayOfWeek=="Saturday" & timerange=="dawn", 1, 0)) %>% 
+  mutate(targeted = ifelse(DayOfWeek == "Saturday" & timerange == "dawn", 1, 0)) %>% 
   mutate(is_Violent = ifelse(crimetype == "Violent", 1, 0))
 
 t.test(data = pls,
@@ -396,18 +397,21 @@ t.test(data = pls,
        ver.equal = FALSE)
 ```
 
-$H_0$: Predicted target has the SAME likelihood of violent crime occuring than
+
+
+### Number Two 
+
+$H_0$: Predicted target has the SAME likelihood of violent crime occurring than
 the sample population.
 
-$H_a$: Predicted target has a GREATER likelihood of violent crime occuring than
+$H_a$: Predicted target has a GREATER likelihood of violent crime occurring than
 the sample population.
 
 $\alpha$ of 0.05    
 
-```{r t test part 2}
-
+```{r t test pt2}
 yeet <- important %>% 
-  mutate(targeted= ifelse(DayOfWeek=="Sunday" & timerange=="night", 1, 0)) %>% 
+  mutate(targeted = ifelse(DayOfWeek =="Sunday" & timerange == "night", 1, 0)) %>% 
   mutate(is_Property = ifelse(crimetype == "Property", 1, 0))
 
 t.test(data = yeet,
@@ -417,19 +421,19 @@ t.test(data = yeet,
        ver.equal = FALSE)
 ```
 
+### Number Three
 
-$H_0:$ Property crime is equally likely to occur during colder Autumn and Winter than compared to other
+$H_0:$ Property crime is equally likely to occur during colder seasons Autumn and Winter than compared to other
 seasons
 
-$H_a:$ Property crime is more likely to occur during colder Autumn and Winter than other seasons
+$H_a:$ Property crime is more likely to occur during the colder seasons (Autumn and Winter)
 
 $\alpha$ of 0.05
 
-```{r t test time}
+```{r t testing weather}
 summercheck <- important %>%
   mutate(is_cold = ifelse(season == "autumn" | season == "winter", 1, 0)) %>%
   mutate(is_Property = ifelse(crimetype == "Property", 1, 0))
-
 
 t.test(data = summercheck,
        is_Property ~ is_cold,
@@ -438,9 +442,11 @@ t.test(data = summercheck,
        ver.equal = FALSE)
 ```
 
+
+
 ### RESULTS
 
-#Chi-Square Test
+# Chi-Square Test
 
 The test statistic is 359.84, which has a chi squared distribution with 18
 df under $H_0$. The p-value is < 2.2e-16 which is less than the $\alpha$ 
@@ -450,7 +456,7 @@ suggest that at the 0.05 significance level that there is a relationship between
 the crime types created above and categories for time of day created above.
 
 
-#Logistic Regression
+# Logistic Regression
 
 For Violent Crime: 
 
@@ -494,10 +500,24 @@ According to the model, the log-odds of a violent crime occuring is greatest whe
 it is Sunday at Night and the least when it is Thursday at Morning.
 
 
-# Hypothesis Tests
+### Hypothesis Tests
 
-add descriptions for 3 t tests
+### Test Number 1's Analysis
+After creating our visualizations, we noticed that Saturday at dawn seemed to be a point of significance; thus, we wanted to see if the predicted target (Saturday at dawn) truly had a greater likelihood of violent crime occurring than the sample population.
 
+t = -5.0675, degrees of freedom = 381.07.
+
+Our p-value < 3.149e-07, so we reject the null hypothesis at the alpha = 0.05 significance level. Thus there is sufficient evidence to suggest that predicted target (Saturday at dawn) has a GREATER likelihood of violent crime occurring than the sample population, which confirmed our suspicions. On a policy standpoint, this means that it might be a good idea to add more police on site during dawn hours on Saturdays in particular to be able to effectively resolve and prevent crime. 
+
+### Test Number 2's Analysis
+After creating our visualizations, we noticed that Sunday nights seemed to be a time of significance. We wanted to further explore and see if this predicted target truly had a greater likelihood of violent crime occurring than the sample population.
+
+t = -2.6675, degrees of freedom = 622.8. Our p-value is 0.00392, so we reject the null hypothesis at the alpha = 0.05 significance level. Thus there is sufficient evidence to suggest that our predicted target of Sunday nights truly had a greater likelihood of violent crime occurring than the sample population, which confirmed our suspicions. Intuitively, this makes sense, as nighttime hours lends itself to additional obscurity. On a policy standpoint, it might be a good idea to add more police on Sunday nights to be able to effectively resolve and prevent crime. 
+
+### Test Number 3's Analysis
+In our visualization relating to seasonal differences and SF crime, we noticed that winter seasons seemed to have more crime. Thus, we wanted to further explore and see if property crime is more likely to occur in the colder seasons (Autumn and Winter).
+
+t = -2.4695, degrees of freedom = 14996. Our p-value is 0.006771, so we reject the null hypothesis at the alpha = 0.05 significance level. Thus there is sufficient evidence to suggest that property crime is more likely to occur in the colder seasons (Autumn and Winter), which confirmed our suspicions. 
 
 
 
@@ -536,7 +556,7 @@ https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1
 
 ### TO DO LIST 
 
-- t test results TINA
+- t test results and analsyis done TINA 
 - justifications methodology  LEAH
 - results add coefficient interpretations KYRA & MIHIR
 - add regression model significance in discussion KYRA
