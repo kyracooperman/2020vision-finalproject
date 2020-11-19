@@ -175,7 +175,7 @@ day <- sanfrancrime%>%
   mutate(cpday = n())%>%
   select(DayOfWeek, cpday)
 
-ggplot(data = day, mapping = aes(x = DayOfWeek)) +
+ggplot(data = day, mapping = aes(x = DayOfWeek, fill = DayOfWeek)) +
     geom_bar()  + labs(x = "Day", y = "Count",
       title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
 ```
@@ -253,7 +253,7 @@ For all police districts, the percentage of violent crimes is lower than 18%.
 
 
 
-#Chi-Square Test
+# Chi-Square Test
 
 #Mihir
 We will be performing a Chi-Squared test between these
@@ -318,7 +318,7 @@ table
 chisq.test(table)
 ```
 
-# T Test
+# T-Test
 
 Given the significant p-value of our chi-square test statistic. We decided to conduct a hypothesis test to see how number of total crimes in San Francisco compares during the daylight and nightime.
 
