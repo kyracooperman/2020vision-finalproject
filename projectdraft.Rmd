@@ -452,41 +452,20 @@ Predicted logit(yes_violent) =
   0.10383 + 0.01188(evening) + 0.00227(morning) +0.06939(night)
 
 
-### DISCUSSION 
 
-#leah's discussion
+### DISCUSSION
 
-When trying to be safest in the busy city of San Francisco, we discovered through our analysis that certain measures can be taken to improve one's safety. This is proven by the multiple factors that influence where, what, and when crime is committed. However, it might first be important to discuss which factors do not play a substantial role in the act of a crime. For example, when looking at the bar graph comparing day of the week and number of crimes, it is clear that the difference from day to day is very minimal. Therefore, looking at just the day itself should not be a factor to whether it may be more dangerous or not. Looking at the visualization comparing type of crime and day of week furthers the point that the day of the week does not play a significant role on crime. Each day has a spread where Property crime is the highest, followed by Miscellaneous Crime, followed by Violent Crime. Something that could cause a possible influence in our data is the fact that the variable crime type was by us, so the organization of what crime fits into what category and the creation of categories is based on our research and knowledge. 
+When trying to be safest in the busy city of San Francisco, we discovered through our analysis that certain measures can be taken to improve one's safety. This is proven by the multiple factors that influence where, what, and when crime is committed. However, it might first be important to discuss which factors do not play a substantial role in the act of a crime. For example, when looking at the bar graph comparing day of the week and number of crimes, it is clear that the difference from day to day is very minimal. Therefore, looking at just the day itself should not be a factor to whether it may be more dangerous or not. Looking at the visualization comparing type of crime and day of week furthers the point that the day of the week does not play a significant role on crime. Each day has a spread where Property Crime is the highest, followed by Miscellaneous Crime, followed by Violent Crime. Something that could cause a possible influence in our data is the fact that the variable crime type was by us, so the organization of what crime fits into what category and the creation of categories is based on our research and knowledge. 
 
-
-#mihir's discussion:
-After creating the the categorical variables for time of day and also creating categorizing the types of crime within larger categories, we determined that there was a statistically significant relationship between the time of day and type of crime. As a result, I created a logistic model to calculate the log-odds of whether a violent crime occured with the predictors of day of the week and time of day. I also created a model for with the same predictors for a property 
-crime.
-
-This model cannot be applied to all cities but the base concept should remain the same. Most cities will have likely have crime peak during the night and during the weekends because more people will not be home.
-
-I think if I were to continue to working the project I would likely break down the model to apply it specific districts By doing so, the characteristics of these individual districts could be identified. Hopefully, these characteristics allow us to potentially apply these models to districts with similar population density, population breakdown, etc.
-
-
-
-#Tina's disc:
-After constructing the faceted visualization of crime count and time, we learned that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes and assault. Most crimes happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization displayed more crimes occurring during afternoons and evenings.
-
-From a policy standpoint, government leaders in San Francisco should consider having additional police on duty during the times when crime is more eminent (afternoon and night). Another course of action could be to simply hire more police trained in Arceny, Theft, and Assault, as they were the most prominent from the faceted graph.
-
-We understand that we cannot extrapolate our analysis to every city; however, our conclusions will be generalizable to similar cities to a moderate degree. Other cities with similar infrastructure and economic conditions are more likely to utilize the analysis we've found. This analysis will not be applicable to Durham, NC, for example, because of the population density and overall difference in cities (SF is a bustling city, while Durham is a smaller, quaint town).  
-
-If we were to continue work on the project, we would add to our analysis by introducing data from different cities that are comparable to SF. It would be interesting to see the parallels in crime rates, as for many college students, traveling to their first job post-grad will be their first taste of independence and financial freedom -- thus, safety is an important factor to take into consideration. Ultimately, expanding the population of interest to citizens in multiple cities would give a better picture of how cases of crime occur differently by region, state, country, or population density (urban vs. rural). Second, we would also adjust for additional potential confounding variables to improve the accuracy of our analysis and models. Finally, to learn more, we'd want to speak with current or past residents and police officers about their experiences. Data is a great way to create thoughtful questions but it may not provide the full or complete answer.
-
-
-#Kyra's discussion:
+In addition, after creating categorical variables for time of day and also categorizing the types of crime within larger categories, we determined that there was a statistically significant relationship between the time of day and type of crime. As a result, we created a logistic model to calculate the log-odds of whether a violent crime occurred with the predictors of day of the week and time of day. We also created a model with the same predictors for property crime. However, this model cannot be applied to all cities; the base concept should remain the same. Most cities will have likely have crime peak during the night and during the weekends because more people will not be home.
 
 The bar graph that shows crime rates and violent crime proportions that is faceted by police districts shows valuable insight as to which police districts are faced with the highest crime rates. The police districts of Tenderloin, Mission, and Ingleside have the highest percentages of violent crime (17.7%, 16.6%, 16% respectively). However, it is Bayview, Northern, and Southern that have the highest total number of violent crimes (239, 202, 291 respectively). Park and Richmond were both consistent in having the lowest numbers of total violent crimes as well as proportion of violent crimes. Noting the success of these districts in maintaining low levels of crimes, it could be beneficial to restructure other districts to mirror their practices. 
 
-Given that factors such as poverty level and unemployment rates are main drivers for crime[1], it would be valuable to assess these numbers for each police district. It would be valuable to know the differences in these factors for districts with more and less crime so that next steps can be taken to lower crime rates. For example, should a future study conclude that Park's
-public education system has higher test scores than that of Bayview, improving schools could be the best step for mitigating crime. 
+An important factor that this analysis is lacking is the populations of each police district. Having a larger population size would likely contribute to greater numbers of crime, even if per capita crime is lower. This information is not present in the dataset we used, but would be necessary to extrapolate a greater conclusion regarding which police district is most dangerous. Given that factors such as poverty level and unemployment rates are main drivers for crime [1], it would be valuable to assess these numbers for each police district. It would also be important to know the differences in these factors for districts with more and less crime so that next steps can be taken to lower crime rates. For example, should a future study conclude that Park’s public education system has higher test scores than that of Bayview, improving schools could be the best step for mitigating crime.
 
-An important factor that this analysis is lacking is the populations of each police district. Having a larger population size would likely contribute to greater numbers of crime, even if per capita crime is lower. This information is not present in the dataset we used, but would be necessary to extrapolate a greater conclusion regarding which police district is most dangerous.
+From a policy standpoint, government leaders in San Francisco should consider having additional police on duty during the times when crime is more eminent (afternoon and night). Another course of action could be to simply hire more police trained in Larceny, Theft, and Assault, as they were the most prominent from the graphs. Again, we understand that we cannot extrapolate our analysis to every city; however, our conclusions will be generalizable to similar cities to a moderate degree. Other cities with similar infrastructure and economic conditions are more likely to utilize the analysis we've found — this analysis will not be applicable to Durham, NC, for example, because of the population density and overall difference in cities (SF is a bustling city, while Durham is a smaller, quaint town).  
+
+If we were to continue work on the project, we would add to our analysis by introducing data from different cities that are comparable to San Francisco. It would be interesting to see the parallels in crime rates, as for many college students, traveling to their first job post-grad will be their first taste of independence and financial freedom -- thus, safety is an important factor to take into consideration. Ultimately, expanding the population of interest to citizens in multiple cities would give a better picture of how cases of crime occur differently by region, state, country, or population density (urban vs. rural). Second, we would also adjust for additional potential confounding variables to improve the accuracy of our analysis and models. Finally, to learn more, we'd want to speak with current or past residents and police officers about their first-hand local experiences with crime. Data is a great way to create thoughtful questions but it may not provide the full or complete answer.
 
 
 
@@ -500,28 +479,23 @@ An important factor that this analysis is lacking is the populations of each pol
 
 [4] https://ucr.fbi.gov/hate-crime/2011/resources/variables-affecting-crime 
 
-links to use for map:
+
+### LINKS USED FOR SF MAP:
 https://www.benjaminsorensen.me/project/sf_police/ 
 https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
 https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
 
 
-### NOTES
-
--notes from OH:
--connect to the next level
--interpret coefficients
--final repo should look like a paper from poli sci
--need to change order of days of the week
--need to add README file
--need to add coefficients 
 
 ### TO DO LIST 
+
 - t test MIHIR
 - justifications methodology LEAH
 - results add coefficient interpretations KYRA
 - add regression model significance in discussion KYRA
-- Discussion - organize it, add conclusion TINA
+- Discussion - organize it, add conclusion TINA done
 - clean up data sets 
+- interpret and add coefficients
+- final repo should look like a paper from poli sci
 - References - LEAH
 - SLIDES - LEAH, TINA
