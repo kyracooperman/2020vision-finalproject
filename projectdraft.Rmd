@@ -336,32 +336,34 @@ $\alpha$ of 0.05
 ```{r crime_daylight_or_nighttime}
 test_sanfrancrime <- important %>%
   mutate(weektype = ifelse(DayOfWeek == "Saturday" | DayOfWeek == "Sunday", "Weekend", "Weekday"),
-         timerange = ifelse(hour >= 7 | hour < 19, "Nighttime", "Daylight"))
+         timerange = ifelse(hour <= 7 | hour > 19, "Nighttime", "Daylight"))
 
 library(forcats)
 test_sanfrancrime <- test_sanfrancrime%>%
-  mutate(weekytype = factor(weektype, levels = c("Weekend","Weektype")))
+  mutate(weektype = factor(weektype, levels = c("Weekend","Weekday")))
 
 test_sanfrancrime <- test_sanfrancrime%>%
   mutate(timerange = factor(timerange, levels = c("Nighttime","Daylight")))
+test_sanfrancrime%>%
+  select(weektype, timerange)
 
-# t.test(weektype ~ timerange,
-#   data = test_sanfrancrime,
-#   mu = 0,
-#   var.equal = FALSE,
-#   alternative = "greater",
-#   conf.level = 0.95)
+ # t.test(timerange~weektype,
+ #   data = test_sanfrancrime,
+ #   mu = 0,
+ #   var.equal = FALSE,
+ #   alternative = "greater",
+ #   conf.level = 0.95)
 
 
-# test_sanfrancrime <- test_sanfrancrime%>%
-#   filter(weektype == "Weekend")%>%
-#   mutate(weekend_hour = hour)
-# #test_sanfrancrime$weekend_hour
-# 
-# test_sanfrancrime <- test_sanfrancrime%>%
-#   filter(weektype == "Weekday")%>%
-#   mutate(weekday_hour = hour)
-# #test_sanfrancrime$weekday_hour
+ test_sanfrancrime <- test_sanfrancrime%>%
+   filter(weektype == "Weekend")%>%
+   mutate(weekend_hour = hour)
+ test_sanfrancrime$weekend_hour
+
+ test_sanfrancrime <- test_sanfrancrime%>%
+   filter(weektype == "Weekday")%>%
+   mutate(weekday_hour = hour)
+  test_sanfrancrime$weekday_hour
 ```
 
 
@@ -369,9 +371,10 @@ test_sanfrancrime <- test_sanfrancrime%>%
 
 
 
-$H_0:$ 
+$H_0:$ Property crime is equally likely to occur during autumn compared to other
+seasons
 
-$H_a:$ 
+$H_a:$ Property crime is more likely to occur during autumn than other seasons
 
 $\alpha$ of 0.05
 
@@ -431,30 +434,6 @@ mod2 <- glm(isProp ~ DayOfWeek + timerange, data = condensed2,
 tidy(mod2)
 ```
 
-
-```{r}
-library(broom)
-mod_aug<- augment(mod2)
-
-##independence
-ggplot(data = mod_aug, 
-       aes(x = 1:nrow(sanfrancrime), 
-           y = .resid)) + 
-  geom_point() + 
-  labs(x = "Index", y = "Residual", title = "Residuals Are Independent")
-
-##equal variance, linearity
-ggplot(mod_aug, mapping = aes(x = .fitted, y = .resid)) +
-  geom_point() + 
-  geom_hline(yintercept = 0, lwd = 2, col = "red", lty = 2) +
-  labs(x = "Predicted Height", y = "Residuals", 
-       title = "Residuals Are Linear With Constant Variance ")
-
-##normality
-ggplot(mod_aug, mapping = aes(x = .resid)) +
-  geom_histogram(bins = 15) + 
-  labs(x = "Residuals", title = "Residuals are Normally Distributed")
-```
 
 
 
@@ -562,10 +541,9 @@ it is Sunday at Night and the least when it is Thursday at Morning.
 #YUE: add quickly that we checked all conditions for regression, satisfied all conditions.
 
 
+# T Test
 
-#Kyra
-Predicted logit(yes_violent) = 
-  0.10383 + 0.01188(evening) + 0.00227(morning) +0.06939(night)
+
 
 
 
