@@ -88,7 +88,7 @@ geographical understanding.
 
 ### Variables
 
-We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, bootstrapping, and a logistic regression model, among others. Note: we plan on grouping violence based on violent vs nonviolent. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening."
+We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, logistic regression model, and hypothesis tests. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening."
 
 ```{r creating time and filtering for important variables}
 important <- sanfrancrime %>%
@@ -111,7 +111,7 @@ important <- important %>%
                             month == 12 | month == 1 | month == 2 ~ 'winter'))
 ```
 
-We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into varable crimetype, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous".
+We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into variable crimetype, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous". It is also important to note that we will also be analyzing crime in the context of whether it was violent or not.
 
 ```{r categorizing crime by type}
 important <- important %>% 
@@ -152,6 +152,7 @@ important <- important %>%
 
 ### Visualizations
 
+Because this dataset is directly from the San Francisco Police Department, Crime is not recorded by Neighborhood but Police District. To get a better understanding of how this may affect crime, we decided to visualize these districts as well as take a loot at the number of crimes reported per district. Because there is not a clear pattern between area and crime count, we will be using proportions when analyzing crime rates from district to district. 
 ```{r map-of-SF}
 library(sf)
 sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
@@ -164,6 +165,9 @@ sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
 plot(sfran["district"], key.pos = 4, key.width = lcm(5), key.length = 1.0, main = "SF Police Districts") 
 #plot(sfran["shape_area"], key.pos = 4, main = "Areas of SF Districts Colored by Size")
 
+sanfrancrime%>%
+  group_by(PdDistrict)%>%
+  count()
 ```
 
 ```{r day of week and number of crimes}
@@ -180,8 +184,7 @@ ggplot(data = day, mapping = aes(x = DayOfWeek, fill = DayOfWeek)) +
       title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
 ```
 
-One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well.
-
+The first relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. Because this recorded over a whole year, it may be important to identify that Friday has the highest number of crimes while Sunday has the least, but overall there is no significant pattern that sticks out.
 
 ```{r day and crimetype}
 important$DayOfWeek <- factor(important$DayOfWeek, levels= c("Sunday", "Monday", 
@@ -196,11 +199,8 @@ ggplot(data = important, mapping = aes(x = DayOfWeek)) +
        title = "Overall Similar Spread of Crime Type from Day to Day",
        fill= "Crime Type")
 ```
-
-The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
-
-
-### 1 - Is there a relationship between crime type and time?
+Because of the fairly equal distribution of crime by day, we decided to delver further by comparing each crime type by day. 
+The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a strong relationship.
 
 ```{r colored-visualizations}
 ggplot(data = important, mapping = aes(x = timerange)) +
@@ -211,7 +211,7 @@ ggplot(data = important, mapping = aes(x = timerange)) +
        fill= "Crime Type")
 ```
 
-### 2 - Which PD has the highest proportion of violent crime?
+This then led us to the possibility that although day of the week may not have much of a relationship, this does not completely outrule time as a factor in how a crime takes places. We visualized this by creating a bar graph comparing frequency of crime and time of day. The visualization proves that there is a clear difference in what part of the day that crime is committed. The greatest amount of property crime occurs during the night, followed by the afternoon. Overall, the latter half of the day is when a higher amount of crime is committed.
 
 ```{r PD vs Violent Crime}
  # pd_violent <- sanfrancrime%>%
