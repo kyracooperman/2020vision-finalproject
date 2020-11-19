@@ -24,3 +24,10 @@ Y (double): gives longitude of crime location
 
 Location (character): exact location using latitude and longitude
 
+Variables We Added:
+
+timerange (character): gives part of the day crime occured in
+
+season (character): season the crime occured in
+
+crimetype (character): the type of crime committed
