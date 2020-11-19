@@ -377,11 +377,11 @@ single sample's population mean and we don't know the true population SD.
 
 ### Number One 
 
-$H_0$: Predicted target has the SAME likelihood of violent crime occurring than
-the sample population.
+The logistic regression predicted that the combination of Saturday and Dawn would have the greatest likelihood of a violent crime occurring. As a result, we are exploring the significance of this relationship with a t-test.
 
-$H_a$: Predicted target has a GREATER likelihood of violent crime occurring than
-the sample population.
+$H_0$: Saturdays at Dawn have the SAME likelihood of a violent crime occurring as the sample population.
+
+$H_a$: Saturdays at Dawn have a GREATER likelihood of a violent crime occurring than the sample population.
 
 $\alpha$ of 0.05    
 
@@ -401,11 +401,11 @@ t.test(data = pls,
 
 ### Number Two 
 
-$H_0$: Predicted target has the SAME likelihood of violent crime occurring than
-the sample population.
+The logistic regression predicted that the combination of Sunday and Night would have the greatest likelihood of a property crime occurring. As a result, we are exploring the significance of this relationship with a t-test.
 
-$H_a$: Predicted target has a GREATER likelihood of violent crime occurring than
-the sample population.
+$H_0$: Sunday at Night have the SAME likelihood of a property crime occurring as the sample population.
+
+$H_a$: Saturdays at Night have a GREATER likelihood of a property crime occurring than the sample population.
 
 $\alpha$ of 0.05    
 
@@ -460,44 +460,19 @@ the crime types created above and categories for time of day created above.
 
 For Violent Crime: 
 
-Predicted logit(p) = -2.131 - 0.071* (Mon.) - 0.021* (Tues.) - 0.114* (Wed.) - 
-0.145* (Thur.) - 0.148* (Fri.) + 0.079 * (Sat.) + 
-0.608* (dawn) + 0.137* (morning) + 0.227* (night)
+Predicted logit(p) = -1.524 - 0.071* (Mon.) - 0.021* (Tues.) - 0.114* (Wed.) - 
+0.145* (Thur.) - 0.148* (Fri.) + 0.079 * (Sat.) - 0.471* (morning) -
+0.608* (afternoon) - 0.381* (night)
 
-
-While holding the day of the week constant, the log odds of a violent crime 
-occurring increases by 0.114 if morning, 0.227 if night, and 0.608 if it is dawn.
-
-While holding the time range of the day constant, the log odds of a violent crime
-occurring decreases by 0.071 if Monday, 0.021 if Tuesday, 0.114 if Wednesday, 
-0.145 if Thursday, and 0.148 if it is Friday. However, the log-odds increase by 
-0.079 if it is Saturday. 
-
-The reference level (not sure if that’s the correct term) is Sunday at Afternoon.
-
-According to the model, the log-odds of a violent crime occuring is greatest when
-it is Saturday at Dawn and the least when it is Friday at Afternoon.
-
+The reference level (not sure if that’s the correct term) is Sunday at Dawn. While holding the day of the week constant, the log odds of a violent crime occuring decreases by 0.471 if morning, 0.608 if afternoon, and 0.381 if it is night. While holding the time range of the day constant, the log odds of a violent crime occuring decreases by 0.071 if Monday, 0.021 if Tuesday, 0.114 if Wednesday, 0.145 if Thursday, and 0.148 if it is Friday. However, the log-odds increase by 0.079 if it is Saturday. According to the model, the log-odds of a violent crime occuring is greatest when it is Saturday at Dawn and the least when it is Friday at Afternoon.
 
 For Property Crime: 
 
 Predicted logit(p) = -0.324 - 0.058* (Mon.) - 0.107* (Tues.) - 0.140* (Wed.) -  
-0.287* (Thur.) - 0.093* (Fri.) - 0.048* (Sat.) - 
-0.109* (dawn) - 0.115* (morning) + 0.396* (night)
+0.287* (Thur.) - 0.093* (Fri.) - 0.048* (Sat.) - 0.006* (morning) +
+0.109* (afternoon) + 0.505* (night)
 
-
-While holding the day of the week constant, the log odds of a violent crime 
-occurring decreases by 0.109 if night and 0.114 if it is dawn. However, the 
-log-odds increase by 0.396 if it is morning.
-
-While holding the time range of the day constant, the log odds of a violent crime
-occurring decreases by -0.058 if Monday, -0.107 if Tuesday, -0.140 if Wednesday,
--0.287 if Thursday, -0.093 if Friday, and -0.048 if it is Saturday.
-
-The reference level (not sure if that’s the correct term) is Sunday at Afternoon.
-
-According to the model, the log-odds of a violent crime occuring is greatest when
-it is Sunday at Night and the least when it is Thursday at Morning.
+The reference level (not sure if that’s the correct term) is Sunday at Afternoon. While holding the day of the week constant, the log odds of a violent crime occuring decreases by 0.006 it is morning. However, the log-odds increase by 0.109 if afternoon and 0.505 if it is night. While holding the time range of the day constant, the log odds of a violent crime occuring decreases by -0.058 if Monday, -0.107 if Tuesday, -0.140 if Wednesday, -0.287 if Thursday, -0.093 if Friday, and -0.048 if it is Saturday. According to the model, the log-odds of a violent crime occuring is greatest when it is Sunday at Night and the least when it is Thursday at Morning.
 
 
 ### Hypothesis Tests
