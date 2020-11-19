@@ -514,6 +514,14 @@ https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1
 -final repo should look like a paper from poli sci
 -need to change order of days of the week
 -need to add README file
-- fix important2
-- Mihir logistic regression - why only 3 time ranges 
-- need to add coefficients 
+-need to add coefficients 
+
+### TO DO LIST 
+- t test MIHIR
+- justifications methodology LEAH
+- results add coefficient interpretations KYRA
+- add regression model significance in discussion KYRA
+- Discussion - organize it, add conclusion TINA
+- clean up data sets 
+- References - LEAH
+- SLIDES - LEAH, TINA
