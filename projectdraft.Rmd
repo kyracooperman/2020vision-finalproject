@@ -43,9 +43,12 @@ Through our research, we plan to investigate what factors the general population
 can associate with local crime in order to be the safest while in San Francisco.
 Our main hypotheses are 1) a later time (e.g. nighttime hours) correlates to a 
 higher level or rate of crime and 2) Location is correlated to levels of crime. 
-We are interested in these two hypotheses because we believe they can then lead 
-to other interesting relationships between variables within this dataset. For 
-example, if there is a strong correlation between night and rate of crime, then 
+We believe it is important to investigate this question because 
+there likely are policy changes that can be implemented to increase safety
+throughout the city. Our investigation will shine light on potential patterns
+of crime.
+
+For example,if there is a strong correlation between night and rate of crime, then 
 is there a correlation between which night of the week (ex. Sunday night) and 
 rate of crime? With location, are there certain districts that have a specific 
 crime that is common there? By delving further and examining these 
@@ -293,6 +296,9 @@ ggplot(data = important, mapping = aes(x = DayOfWeek)) +
 The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
 
 
+
+
+
 #Chi-Square Test
 
 #Mihir
@@ -410,6 +416,7 @@ test_sanfrancrime <- test_sanfrancrime%>%
 #Logistic Regression
 
 #Mihir
+
 By using logistic regression, we hope to answer the question of how much more
 likely a violent crime is to occur depending on the time range of the crime
 committed. This model below shows the predicted proportion of crimes that are
@@ -417,6 +424,9 @@ violent given the predictor of time range. The three time ranges used are
 evening, morning, and night. We hypothesize that the highest proportion of 
 violent crimes will occur at night because there are typically fewer witnesses
 at these hours. 
+
+Before using logistic regression, we checked that all necessary conditions...
+
 ```{r logistic model}
 condensed <- important %>% 
   mutate(isViolent = ifelse(crimetype == "Violent", 1, 0)) %>% 
@@ -440,13 +450,13 @@ tidy(mod2)
 
 
 
-#4- How does time range affect whether crimes are violent? Kyra
+<!-- #4- How does time range affect whether crimes are violent? Kyra -->
 
-```{r, echo = FALSE}
-mod<- lm(yes_violent~timerange, 
-         data = important3)
-tidy(mod)
-```
+<!-- ```{r, echo = FALSE} -->
+<!-- mod<- glm(yes_violent~timerange,  -->
+<!--          data = important3) -->
+<!-- tidy(mod) -->
+<!-- ``` -->
 
 
 ### RESULTS
