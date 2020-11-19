@@ -88,7 +88,7 @@ geographical understanding.
 
 ### Variables
 
-We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, bootstrapping, and a logistic regression model, among others. Note: we plan on grouping violence based on violent vs nonviolent. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening."
+We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, logistic regression model, and hypothesis tests. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening."
 
 ```{r creating time and filtering for important variables}
 important <- sanfrancrime %>%
@@ -111,7 +111,7 @@ important <- important %>%
                             month == 12 | month == 1 | month == 2 ~ 'winter'))
 ```
 
-We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into variable crime type, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous".
+We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into variable crimetype, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous". It is also important to note that we will also be analyzing crime in the context of whether it was violent or not.
 
 ```{r categorizing crime by type}
 important <- important %>% 
@@ -151,26 +151,25 @@ important <- important %>%
 
 ### Visualizations
 
-```{r map-of-SF}
+Because this dataset is directly from the San Francisco Police Department, Crime is not recorded by Neighborhood but Police District. To get a better understanding of how this may affect crime, we decided to visualize these districts as well as take a look at the number of crimes reported per district. Because there is not a clear pattern between area and crime count, we will be using proportions when analyzing crime rates from district to district.
+
+```{r police districts}
 library(sf)
 sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
-sfran
+
+
+plot(sfran["district"], key.pos = 4, key.width = lcm(5), key.length = 1.0,
+     main = "SF Police Districts")
+sanfrancrime%>%
+  group_by(PdDistrict)%>%
+  count()
+```
+
+```{r map-of-SF}
 ggplot(sfran) +
     geom_sf(color = "black", size = .5, fill = "#F5F2D0") +
      labs(title = "Current Police Districts in San Francisco With Crime in Color") +
   geom_point(data = important, aes(x = X, y = Y, color = crimetype), alpha = 0.5, size = .7)
-
-# ggplot(data = important, aes(x = X, y = Y, color = crimetype))+
-  # geom_point(data = important, aes(x = X, y = Y, color = crimetype) ,alpha = 0.5, size = .5)
-
-plot(sfran["district"], key.pos = 4, key.width = lcm(5), key.length = 1.0,
-     main = "SF Police Districts")
-
-# ggplot(data = important, aes(x = X, y = Y, color = crimetype))+
-#   geom_point(alpha = 0.5, size = .5)
-
-#plot(sfran["shape_area"], key.pos = 4, main = "Areas of SF Districts Colored by Size")
-
 ```
 There's a lot of Property Crime concentrated in the Central, Northern, Southern, and Tenderloin.
 
@@ -189,7 +188,7 @@ ggplot(data = day, mapping = aes(x = DayOfWeek, fill = DayOfWeek)) +
       title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
 ```
 
-One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well.
+The first relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. Because this recorded over a whole year, it may be important to identify that Friday has the highest number of crimes while Sunday has the least, but overall there is no significant pattern that sticks out.
 
 
 ```{r day and crimetype}
@@ -206,12 +205,13 @@ ggplot(data = important, mapping = aes(x = DayOfWeek)) +
        fill= "Crime Type")
 ```
 
-The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
+Because of the fairly equal distribution of crime by day, we decided to delver further by comparing each crime type by day. 
+The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a strong relationship.
 
-
-### 1 - Is there a relationship between crime type and time?
 
 ```{r colored-visualizations}
+
+important$timerange <- factor(important$timerange, levels= c("dawn", "morning", "afternoon", "night")) 
 ggplot(data = important, mapping = aes(x = timerange)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
   labs(x = "Time of the Day", y = "Count of Crime Type", 
@@ -220,12 +220,14 @@ ggplot(data = important, mapping = aes(x = timerange)) +
        fill= "Crime Type")
 ```
 
+This then led us to the possibility that although day of the week may not have much of a relationship, this does not completely outrule time as a factor in how a crime takes places. We visualized this by creating a bar graph comparing frequency of crime and time of day. The visualization proves that there is a clear difference in what part of the day that crime is committed. The greatest amount of property crime occurs during the night, followed by the afternoon. Overall, the latter half of the day is when a higher amount of crime is committed.
+
+###CHANGE DESCRIPTION
+
+
 ### 2 - Which PD has the highest proportion of violent crime?
 
 ```{r PD vs Violent Crime}
- # pd_violent <- sanfrancrime%>%
- #   group_by(Category)%>%
- #   count()
 
  important3 <- important
 
@@ -234,8 +236,7 @@ ggplot(data = important, mapping = aes(x = timerange)) +
    group_by(PdDistrict)%>%
    mutate(yes_violent = crimetype == "Violent")%>%
    arrange(desc(yes_violent))
-
-#### do we need to print this pipeline or was it for checking?
+ 
  important3%>%
    group_by(PdDistrict)%>%
    count(yes_violent)%>%
@@ -251,8 +252,6 @@ ggplot(important3, aes(x = PdDistrict, fill = yes_violent))+
          "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
        y = "Proportion of Violent Crimes", x = "Police District")
 ```
-
-
 By looking at the table and bar plot, it is clear that Ingleside, Mission, and 
 Tenderloin have the highest rates of violent crime.
 
@@ -261,6 +260,13 @@ Park and Richmond both have the lowest rates and total numbers of violent crimes
 For all police districts, the percentage of violent crimes is lower than 18%. 
 
 
+```{r winter_autumn}
+important$season <- factor(important$season, levels= c("spring", "summer", "autumn", "winter"))
+ggplot(data = important, mapping = aes(x = season)) +
+  geom_bar(aes(fill = crimetype), position = "dodge") 
+
+# add title
+```
 
 # Chi-Square Test
 
@@ -327,84 +333,6 @@ table
 chisq.test(table)
 ```
 
-# T-Test
-
-Given the significant p-value of our chi-square test statistic. We decided to conduct a hypothesis test to see how number of total crimes in San Francisco compares during the daylight and nightime.
-
-We will now use the CLT to perform inference because the observations are 
-independently selected and in this case, the sample size is large enough (n>30) 
-for the CLT to apply. We are using t-distribution because we are testing a 
-single sample's population mean and we don't know the true population SD.
-
-$H_0:$ The true mean time of crimes committed during the week is equal to the true mean time of crimes committed during the weekend
-
-$H_a:$ The true mean time of crimes committed during the week is less than true mean time of crimes committed during the weekend
-
-$\alpha$ of 0.05
-
-```{r crime_daylight_or_nighttime}
-test_sanfrancrime <- important %>%
-  mutate(weektype = ifelse(DayOfWeek == "Saturday" | DayOfWeek == "Sunday", "Weekend", "Weekday"),
-         timerange = ifelse(hour <= 7 | hour > 19, "Nighttime", "Daylight"))
-
-library(forcats)
-test_sanfrancrime <- test_sanfrancrime%>%
-  mutate(weektype = factor(weektype, levels = c("Weekend","Weekday")))
-
-test_sanfrancrime <- test_sanfrancrime%>%
-  mutate(timerange = factor(timerange, levels = c("Nighttime","Daylight")))
-test_sanfrancrime%>%
-  select(weektype, timerange)
-
- # t.test(timerange~weektype,
- #   data = test_sanfrancrime,
- #   mu = 0,
- #   var.equal = FALSE,
- #   alternative = "greater",
- #   conf.level = 0.95)
-
-
- test_sanfrancrime <- test_sanfrancrime%>%
-   filter(weektype == "Weekend")%>%
-   mutate(weekend_hour = hour)
- test_sanfrancrime$weekend_hour
-
- test_sanfrancrime <- test_sanfrancrime%>%
-   filter(weektype == "Weekday")%>%
-   mutate(weekday_hour = hour)
-  test_sanfrancrime$weekday_hour
-```
-
-
-
-
-
-
-$H_0:$ Property crime is equally likely to occur during autumn compared to other
-seasons
-
-$H_a:$ Property crime is more likely to occur during autumn than other seasons
-
-$\alpha$ of 0.05
-
-```{r t test time}
-ggplot(data = important, mapping = aes(x = season)) +
-  geom_bar(aes(fill = crimetype), position = "dodge") 
-
-summercheck <- important %>%
-  mutate(is_autumn = ifelse(season == "autumn", 1, 0)) %>%
-  mutate(is_Property = ifelse(crimetype == "Property", 1, 0))
-
-
-t.test(data = summercheck,
-       is_Property ~ is_autumn,
-       conf.level = 0.95,
-       alternative = "two.sided",
-       ver.equal = FALSE)
-```
-Given the p-value of 0.08554 is greater than the alpha level of 0.05, we fail
-to reject the null hypothesis.
-
 
 # Logistic Regression
 
@@ -426,7 +354,6 @@ linearity, independence, normality, and equal variance were met.
 condensed <- important %>% 
   mutate(isViolent = ifelse(crimetype == "Violent", 1, 0)) %>% 
   select(DayOfWeek, PdDistrict, timerange, isViolent)
-#condensed
 
 mod1 <- glm(isViolent ~ DayOfWeek + timerange, data = condensed,
   family = "binomial")
@@ -436,13 +363,18 @@ tidy(mod1)
 condensed2 <- important %>% 
   mutate(isProp = ifelse(crimetype == "Property", 1, 0)) %>% 
   select(DayOfWeek, PdDistrict, timerange, isProp)
-#condensed2
 
 mod2 <- glm(isProp ~ DayOfWeek + timerange, data = condensed2,
   family = "binomial")
 tidy(mod2)
 ```
 
+### Hypothesis Tests
+
+We will now use the CLT to perform inference because the observations are 
+independently selected and in this case, the sample size is large enough (n>30) 
+for the CLT to apply. We are using t-distribution because we are testing a 
+single sample's population mean and we don't know the true population SD.
 
 $H_0$: Predicted target has the SAME likelihood of violent crime occuring than
 the sample population.
@@ -462,8 +394,6 @@ t.test(data = pls,
        conf.level = 0.95,
        alternative = "less",
        ver.equal = FALSE)
-
-##im not sure if i did this t-test right? should it be less or greater or two-sided
 ```
 
 $H_0$: Predicted target has the SAME likelihood of violent crime occuring than
@@ -487,6 +417,27 @@ t.test(data = yeet,
        ver.equal = FALSE)
 ```
 
+
+$H_0:$ Property crime is equally likely to occur during colder Autumn and Winter than compared to other
+seasons
+
+$H_a:$ Property crime is more likely to occur during colder Autumn and Winter than other seasons
+
+$\alpha$ of 0.05
+
+```{r t test time}
+summercheck <- important %>%
+  mutate(is_cold = ifelse(season == "autumn" | season == "winter", 1, 0)) %>%
+  mutate(is_Property = ifelse(crimetype == "Property", 1, 0))
+
+
+t.test(data = summercheck,
+       is_Property ~ is_cold,
+       conf.level = 0.95,
+       alternative = "less",
+       ver.equal = FALSE)
+```
+
 ### RESULTS
 
 #Chi-Square Test
@@ -501,7 +452,6 @@ the crime types created above and categories for time of day created above.
 
 #Logistic Regression
 
-#Mihir
 For Violent Crime: 
 
 Predicted logit(p) = -2.131 - 0.071* (Mon.) - 0.021* (Tues.) - 0.114* (Wed.) - 
@@ -544,11 +494,9 @@ According to the model, the log-odds of a violent crime occuring is greatest whe
 it is Sunday at Night and the least when it is Thursday at Morning.
 
 
-#YUE: add quickly that we checked all conditions for regression, satisfied all conditions.
+# Hypothesis Tests
 
-
-# T Test
-
+add descriptions for 3 t tests
 
 
 
@@ -588,13 +536,10 @@ https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1
 
 ### TO DO LIST 
 
-- t test MIHIR
-- justifications methodology LEAH
-- results add coefficient interpretations KYRA
+- t test results TINA
+- justifications methodology  LEAH
+- results add coefficient interpretations KYRA & MIHIR
 - add regression model significance in discussion KYRA
 - Discussion - organize it, add conclusion TINA done
-- clean up data sets 
-- interpret and add coefficients
-- final repo should look like a paper from poli sci
 - References - LEAH
 - SLIDES - LEAH, TINA
