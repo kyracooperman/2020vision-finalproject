@@ -427,9 +427,11 @@ tidy(mod2)
 
 <!-- #4- How does time range affect whether crimes are violent? Kyra -->
 
-$H_0$: predicted target and total sample pop have same likelihood of violent crime
+$H_0$: Predicted target has the SAME likelihood of violent crime occuring than
+the sample population.
 
-$H_a$: 
+$H_a$: Predicted target has a GREATER likelihood of violent crime occuring than
+the sample population.
 
 $\alpha$ of 0.05    
 
@@ -446,7 +448,17 @@ t.test(data = pls,
        ver.equal = FALSE)
 
 ##im not sure if i did this t-test right? should it be less or greater or two-sided
+```
 
+$H_0$: Predicted target has the SAME likelihood of violent crime occuring than
+the sample population.
+
+$H_a$: Predicted target has a GREATER likelihood of violent crime occuring than
+the sample population.
+
+$\alpha$ of 0.05    
+
+```{r t test part 2}
 
 yeet <- important %>% 
   mutate(targeted= ifelse(DayOfWeek=="Sunday" & timerange=="night", 1, 0)) %>% 
