@@ -16,7 +16,6 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
 
 ### INTRODUCTION AND DATA
 
-
 San Francisco is a city known for its strong economy and booming tech industry. 
 In addition to Silicon Valley and San Jose, the Bay Area is home to many
 powerful companies such as Google, Tesla, Apple, and Cisco. Because of these 
@@ -91,7 +90,8 @@ geographical understanding.
 ### Variables
 
 We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, bootstrapping, and a logistic regression model, among others. Note: we plan on grouping violence based on violent vs nonviolent. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening."
-```{r mihir creating time and filtering for important variables}
+
+```{r creating time and filtering for important variables}
 important <- sanfrancrime %>%
   mutate(str = as.character(Time)) %>%
   mutate(hourstr = substr(str, 1, 2)) %>%
@@ -104,7 +104,9 @@ important <- important %>%
                                 hour >= 12 & hour < 18 ~ "afternoon",
                                 hour >= 18 & hour < 24 ~ "night"))
 ```
+
 We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into varable crimetype, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous".
+
 ```{r categorizing crime by type}
 important <- important %>% 
   mutate(crimetype = case_when(
@@ -143,10 +145,10 @@ important <- important %>%
 glimpse(important)
 ```
 
+
 ### Visualizations
 
-
-```{r map-needs-geometry}
+```{r map-of-SF}
 library(sf)
 sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
 sfran
@@ -178,7 +180,6 @@ ggplot(data = day, mapping = aes(x = DayOfWeek)) +
 One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well.
 
 
-
 ```{r day and crimetype}
 important$DayOfWeek <- factor(important$DayOfWeek, levels= c("Sunday", "Monday", 
     "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
@@ -197,19 +198,18 @@ ggplot(data = important, mapping = aes(x = DayOfWeek)) +
 The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
 
 
-### 1- Relationship between crime type and time? Mihir
+### 1 - Is there a relationship between crime type and time?
 
-```{r random visualizations}
+```{r colored-visualizations}
 ggplot(data = important, mapping = aes(x = timerange)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
   labs(x = "Time of the Day", y = "Count of Crime Type", 
-       title = "The most property crime happens in the Evening",
-       subtitle = "The most violent crime happens in the Evening",
+       title = "The most property crime happens in the evening",
+       subtitle = "The most violent crime happens in the evening",
        fill= "Crime Type")
-
 ```
 
-### 3- Which PD has the highest proportion of violent crime? Kyra
+### 2 - Which PD has the highest proportion of violent crime?
 
 ```{r PD vs Violent Crime}
  # pd_violent <- sanfrancrime%>%
@@ -246,12 +246,10 @@ ggplot(important3, aes(x = PdDistrict, fill = yes_violent))+
 
 By looking at the table and bar plot, it is clear that Ingleside, Mission, and 
 Tenderloin have the highest rates of violent crime.
+
 However, Mission, Southern, and Bayview have the highest number of violent crimes.
 Park and Richmond both have the lowest rates and total numbers of violent crimes.
 For all police districts, the percentage of violent crimes is lower than 18%. 
-
-
-
 
 
 
@@ -320,7 +318,7 @@ table
 chisq.test(table)
 ```
 
-#T Test
+# T Test
 
 Given the significant p-value of our chi-square test statistic. We decided to conduct a hypothesis test to see how number of total crimes in San Francisco compares during the daylight and nightime.
 
@@ -369,9 +367,9 @@ test_sanfrancrime <- test_sanfrancrime%>%
 
 
 
-#Logistic Regression
+# Logistic Regression
 
-#Mihir
+# Mihir
 
 By using logistic regression, we hope to answer the question of how much more
 likely a violent crime is to occur depending on the time range of the crime
@@ -471,7 +469,7 @@ If we were to continue work on the project, we would add to our analysis by intr
 
 ### REFERENCES
 
-[1]https://poetsandquantsforundergrads.com/2020/05/15/are-these-the-50-best-metro-areas-for-recent-college-grads/
+[1] https://poetsandquantsforundergrads.com/2020/05/15/are-these-the-50-best-metro-areas-for-recent-college-grads/
 
 [2] https://www.sfchronicle.com/bayarea/article/Which-crimes-are-up-down-in-SF-during-15408485.php
 
@@ -484,7 +482,6 @@ If we were to continue work on the project, we would add to our analysis by intr
 https://www.benjaminsorensen.me/project/sf_police/ 
 https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
 https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
-
 
 
 ### TO DO LIST 
