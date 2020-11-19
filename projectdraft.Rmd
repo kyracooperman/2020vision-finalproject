@@ -64,7 +64,6 @@ In order to assess these hypotheses, we will look at the following relationships
 set.seed(1)
 sanfrancrime <- sanfrancrimeBIG %>%
   sample_n(15000)
-  glimpse(sanfrancrime)
 ```
 
 The observations in the dataset are of crime data in San Francisco from 2016. We
@@ -141,8 +140,6 @@ important <- important %>%
     Category == "MISSING PERSON" |Category == "NON-CRIMINAL"|
     Category == "OTHER OFFENSES" |Category == "SUICIDE"| 
     Category == "FAMILY OFFENSES" | Category == "RUNAWAY" ~ "Miscellaneous"))
-
-glimpse(important)
 ```
 
 
@@ -151,7 +148,6 @@ glimpse(important)
 ```{r map-of-SF}
 library(sf)
 sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
-sfran
 
 # ggplot(sfran) +
 #     geom_sf(color = "blue", size = 1.5, fill = "orange", alpha = 0.50) +
@@ -171,7 +167,7 @@ day <- sanfrancrime%>%
   group_by(DayOfWeek)%>%
   mutate(cpday = n())%>%
   select(DayOfWeek, cpday)
-day
+
 ggplot(data = day, mapping = aes(x = DayOfWeek)) +
     geom_bar()  + labs(x = "Day", y = "Count",
       title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
@@ -186,7 +182,6 @@ important$DayOfWeek <- factor(important$DayOfWeek, levels= c("Sunday", "Monday",
 crimetypeday <-important%>%
   group_by(crimetype)%>%
   mutate(ctcount = n())
-crimetypeday
 
 ggplot(data = important, mapping = aes(x = DayOfWeek)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
@@ -224,7 +219,7 @@ ggplot(data = important, mapping = aes(x = timerange)) +
    mutate(yes_violent = crimetype == "Violent")%>%
    arrange(desc(yes_violent))
 
-
+#### do we need to print this pipeline or was it for checking?
  important3%>%
    group_by(PdDistrict)%>%
    count(yes_violent)%>%
@@ -239,8 +234,6 @@ ggplot(important3, aes(x = PdDistrict, fill = yes_violent))+
   labs(title =
          "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
        y = "Proportion of Violent Crimes", x = "Police District")
-
-
 ```
 
 
