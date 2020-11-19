@@ -239,12 +239,12 @@ ggplot(data = important, mapping = aes(x = timerange)) +
 ggplot(important3, aes(x = PdDistrict, fill = yes_violent))+
   geom_bar(position = "fill") + coord_flip()+
   labs(title =
-         "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
+         "Ingleside, Bayview, and Tenderloin Have Highest Violent Crime Rates ",
        y = "Proportion of Violent Crimes", x = "Police District")
 ```
 
 
-By looking at the table and bar plot, it is clear that Ingleside, Mission, and 
+By looking at the table and bar plot, it is clear that Ingleside, Bayview, and 
 Tenderloin have the highest rates of violent crime.
 
 However, Mission, Southern, and Bayview have the highest number of violent crimes.
