@@ -95,13 +95,20 @@ important <- sanfrancrime %>%
   mutate(str = as.character(Time)) %>%
   mutate(hourstr = substr(str, 1, 2)) %>%
   mutate (hour = as.numeric(hourstr)) %>% 
-  select(Category, DayOfWeek, Date, PdDistrict, Resolution, hour)
+  mutate(month = as.numeric(substr(Date, 1, 2))) %>% 
+  select(Category, DayOfWeek, Date, PdDistrict, Resolution, hour, month)
 
 important <- important %>% 
   mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "dawn",
                                 hour >= 6 & hour < 12 ~ "morning",
                                 hour >= 12 & hour < 18 ~ "afternoon",
                                 hour >= 18 & hour < 24 ~ "night"))
+
+important <- important %>% 
+  mutate(season = case_when(month >= 3 & month <= 5~ 'spring', 
+                            month >= 6 & month <= 8 ~ 'summer',
+                            month >= 9 & month <= 11 ~ 'autumn',
+                            month == 12 | month == 1 | month == 2 ~ 'winter'))
 ```
 
 We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into varable crimetype, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous".
@@ -360,6 +367,27 @@ test_sanfrancrime <- test_sanfrancrime%>%
 
 
 
+
+
+
+
+```{r t test time}
+ggplot(data = important, mapping = aes(x = season)) +
+  geom_bar(aes(fill = crimetype), position = "dodge") 
+
+# summercheck <- important %>%
+#   mutate(is_autumn = ifelse(season == "autumn", "yes", "no")) %>%
+#   mutate(is_Property = ifelse(crimetype == "Property", 1, 0))
+# 
+# t.test(data = summercheck,
+#        is_autumn ~ is_Property,
+#        conf.level = 0.95,
+#        alternative = "two.sided",
+#        ver.equal = FALSE)
+```
+
+
+
 # Logistic Regression
 
 # Mihir
@@ -399,12 +427,37 @@ tidy(mod2)
 
 <!-- #4- How does time range affect whether crimes are violent? Kyra -->
 
-<!-- ```{r, echo = FALSE} -->
-<!-- mod<- glm(yes_violent~timerange,  -->
-<!--          data = important3) -->
-<!-- tidy(mod) -->
-<!-- ``` -->
+$H_0$: predicted target and total sample pop have same likelihood of violent crime
 
+$H_a$: 
+
+$\alpha$ of 0.05    
+
+
+```{r another attempted t-test}
+pls <- important %>% 
+  mutate(targeted= ifelse(DayOfWeek=="Saturday" & timerange=="dawn", 1, 0)) %>% 
+  mutate(is_Violent = ifelse(crimetype == "Violent", 1, 0))
+
+t.test(data = pls,
+       is_Violent ~ targeted,
+       conf.level = 0.95,
+       alternative = "less",
+       ver.equal = FALSE)
+
+##im not sure if i did this t-test right? should it be less or greater or two-sided
+
+
+yeet <- important %>% 
+  mutate(targeted= ifelse(DayOfWeek=="Sunday" & timerange=="night", 1, 0)) %>% 
+  mutate(is_Property = ifelse(crimetype == "Property", 1, 0))
+
+t.test(data = yeet,
+       is_Property ~ targeted,
+       conf.level = 0.95,
+       alternative = "less",
+       ver.equal = FALSE)
+```
 
 ### RESULTS
 
@@ -428,13 +481,18 @@ Predicted logit(p) = -2.131 - 0.071* (Mon.) - 0.021* (Tues.) - 0.114* (Wed.) -
 0.608* (dawn) + 0.137* (morning) + 0.227* (night)
 
 
-While holding the day of the week constant, the log odds of a violent crime occuring increases by 0.114 if morning, 0.227 if night, and 0.608 if it is dawn.
+While holding the day of the week constant, the log odds of a violent crime 
+occurring increases by 0.114 if morning, 0.227 if night, and 0.608 if it is dawn.
 
-While holding the time range of the day constant, the log odds of a violent crime occuring decreases by 0.071 if Monday, 0.021 if Tuesday, 0.114 if Wednesday, 0.145 if Thursday, and 0.148 if it is Friday. However, the log-odds increase by 0.079 if it is Saturday. 
+While holding the time range of the day constant, the log odds of a violent crime
+occurring decreases by 0.071 if Monday, 0.021 if Tuesday, 0.114 if Wednesday, 
+0.145 if Thursday, and 0.148 if it is Friday. However, the log-odds increase by 
+0.079 if it is Saturday. 
 
 The reference level (not sure if that’s the correct term) is Sunday at Afternoon.
 
-According to the model, the log-odds of a violent crime occuring is greatest when it is Saturday at Dawn and the least when it is Friday at Afternoon.
+According to the model, the log-odds of a violent crime occuring is greatest when
+it is Saturday at Dawn and the least when it is Friday at Afternoon.
 
 
 For Property Crime: 
@@ -444,13 +502,18 @@ Predicted logit(p) = -0.324 - 0.058* (Mon.) - 0.107* (Tues.) - 0.140* (Wed.) -
 0.109* (dawn) - 0.115* (morning) + 0.396* (night)
 
 
-While holding the day of the week constant, the log odds of a violent crime occuring decreases by 0.109 if night and 0.114 if it is dawn. However, the log-odds increase by 0.396 if it is morning.
+While holding the day of the week constant, the log odds of a violent crime 
+occurring decreases by 0.109 if night and 0.114 if it is dawn. However, the 
+log-odds increase by 0.396 if it is morning.
 
-While holding the time range of the day constant, the log odds of a violent crime occuring decreases by -0.058 if Monday, -0.107 if Tuesday, -0.140 if Wednesday, -0.287 if Thursday, -0.093 if Friday, and -0.048 if it is Saturday.
+While holding the time range of the day constant, the log odds of a violent crime
+occurring decreases by -0.058 if Monday, -0.107 if Tuesday, -0.140 if Wednesday,
+-0.287 if Thursday, -0.093 if Friday, and -0.048 if it is Saturday.
 
 The reference level (not sure if that’s the correct term) is Sunday at Afternoon.
 
-According to the model, the log-odds of a violent crime occuring is greatest when it is Sunday at Night and the least when it is Thursday at Morning.
+According to the model, the log-odds of a violent crime occuring is greatest when
+it is Sunday at Night and the least when it is Thursday at Morning.
 
 
 #YUE: add quickly that we checked all conditions for regression, satisfied all conditions.
