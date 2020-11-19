@@ -159,7 +159,7 @@ sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
 
 
 plot(sfran["district"], key.pos = 4, key.width = lcm(5), key.length = 1.0,
-     main = "SF Police Districts")
+     main = "San Francisco Police Districts")
 sanfrancrime%>%
   group_by(PdDistrict)%>%
   count()
@@ -168,9 +168,11 @@ sanfrancrime%>%
 ```{r map-of-SF}
 ggplot(sfran) +
     geom_sf(color = "black", size = .5, fill = "#F5F2D0") +
-     labs(title = "Current Police Districts in San Francisco With Crime in Color") +
+     labs(title = "Current Police Districts in San Francisco With Crime in Color",
+          subtitle = "High Concentration of Crime in Northeast SF", x = "Latitude", y = "Longitude", color = "Crime Type") +
   geom_point(data = important, aes(x = X, y = Y, color = crimetype), alpha = 0.5, size = .7)
 ```
+
 There's a lot of Property Crime concentrated in the Central, Northern, Southern, and Tenderloin.
 
 
@@ -185,7 +187,7 @@ day <- sanfrancrime%>%
 
 ggplot(data = day, mapping = aes(x = DayOfWeek, fill = DayOfWeek)) +
     geom_bar()  + labs(x = "Day", y = "Count",
-      title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
+      title = "Number of Crimes Per Day Suggest Similar Spread of Crime") 
 ```
 
 The first relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. Because this recorded over a whole year, it may be important to identify that Friday has the highest number of crimes while Sunday has the least, but overall there is no significant pattern that sticks out.
@@ -200,8 +202,8 @@ crimetypeday <-important%>%
 
 ggplot(data = important, mapping = aes(x = DayOfWeek)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
-  labs(x = "Day of the Week", y = "Count of Crime Type", 
-       title = "Overall Similar Spread of Crime Type from Day to Day",
+  labs(x = "Day of the Week", y = "Count", 
+       title = "Overall Similar Distribution of Crime Type from Day to Day",
        fill= "Crime Type")
 ```
 
@@ -214,9 +216,9 @@ The faceted bar graph shows the frequency of each crime rate on a given day of t
 important$timerange <- factor(important$timerange, levels= c("dawn", "morning", "afternoon", "night")) 
 ggplot(data = important, mapping = aes(x = timerange)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
-  labs(x = "Time of the Day", y = "Count of Crime Type", 
-       title = "The most property crime happens in the evening",
-       subtitle = "The most violent crime happens in the evening",
+  labs(x = "Time of the Day", y = "Count", 
+       title = "The Most Property Crime Occurs in the Latter Half of the Day",
+       subtitle = "TThe Most Violent Also Crime Occurs in the Latter Half of the Day",
        fill= "Crime Type")
 ```
 
@@ -249,10 +251,10 @@ This then led us to the possibility that although day of the week may not have m
 ggplot(important3, aes(x = PdDistrict, fill = yes_violent))+
   geom_bar(position = "fill") + coord_flip()+
   labs(title =
-         "Ingleside, Mission, and Tenderloin Have Highest Violent Crime Rates ",
-       y = "Proportion of Violent Crimes", x = "Police District")
+         "Ingleside, Bayview, and Tenderloin Have Highest Violent Crime Rates ",
+       y = "Proportion of Violent Crimes", x = "Police District", fill = "Violent Crime")
 ```
-By looking at the table and bar plot, it is clear that Ingleside, Mission, and 
+By looking at the table and bar plot, it is clear that Ingleside, Bayview, and 
 Tenderloin have the highest rates of violent crime.
 
 However, Mission, Southern, and Bayview have the highest number of violent crimes.
@@ -263,7 +265,10 @@ For all police districts, the percentage of violent crimes is lower than 18%.
 ```{r winter_autumn}
 important$season <- factor(important$season, levels= c("spring", "summer", "autumn", "winter"))
 ggplot(data = important, mapping = aes(x = season)) +
-  geom_bar(aes(fill = crimetype), position = "dodge") 
+  geom_bar(aes(fill = crimetype), position = "dodge") + 
+  labs(title = "Distribution of Crime Suggests More 
+       Property Crime in Autumn and Winter", fill = "Crime Type", x="Season",
+       y = "Count")
 
 # add title
 ```
