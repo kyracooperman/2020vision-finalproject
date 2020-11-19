@@ -145,6 +145,58 @@ glimpse(important)
 
 ### Visualizations
 
+
+```{r map-needs-geometry}
+library(sf)
+sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
+sfran
+
+# ggplot(sfran) +
+#     geom_sf(color = "blue", size = 1.5, fill = "orange", alpha = 0.50) +
+#     labs(title = "Current Police Districts in San Francisco Singled Out on a Map") +
+#     theme_bw()
+
+plot(sfran["district"], key.pos = 4, key.width = lcm(5), key.length = 1.0, main = "SF Police Districts") 
+#plot(sfran["shape_area"], key.pos = 4, main = "Areas of SF Districts Colored by Size")
+
+```
+
+```{r day of week and number of crimes}
+library(forcats)
+sanfrancrime$DayOfWeek <- factor(sanfrancrime$DayOfWeek, levels= c("Sunday", "Monday", 
+    "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+day <- sanfrancrime%>%
+  group_by(DayOfWeek)%>%
+  mutate(cpday = n())%>%
+  select(DayOfWeek, cpday)
+day
+ggplot(data = day, mapping = aes(x = DayOfWeek)) +
+    geom_bar()  + labs(x = "Day", y = "Count",
+      title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
+```
+
+One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well.
+
+
+
+```{r day and crimetype}
+important$DayOfWeek <- factor(important$DayOfWeek, levels= c("Sunday", "Monday", 
+    "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+crimetypeday <-important%>%
+  group_by(crimetype)%>%
+  mutate(ctcount = n())
+crimetypeday
+
+ggplot(data = important, mapping = aes(x = DayOfWeek)) +
+  geom_bar(aes(fill = crimetype), position = "dodge") +
+  labs(x = "Day of the Week", y = "Count of Crime Type", 
+       title = "Overall Similar Spread of Crime Type from Day to Day",
+       fill= "Crime Type")
+```
+
+The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
+
+
 ### 1- Relationship between crime type and time? Mihir
 
 ```{r random visualizations}
@@ -156,67 +208,6 @@ ggplot(data = important, mapping = aes(x = timerange)) +
        fill= "Crime Type")
 
 ```
-
-
-###2 - Relationship between time and crime? Tina
-
-Question: Do more crimes generally occur at night in San Francisco? We will construct an effective, well-labeled visualization of the crime count and time.
-
-```{r crimesnightSF}
-sanfrancrime <- sanfrancrime %>%
-  mutate(str = as.character(Time)) %>%
-  mutate(hourstr = substr(str, 1, 2)) %>%
-  mutate (hour = as.numeric(hourstr))
-
-sanfrancrime <- sanfrancrime %>%
-  mutate(timerange = case_when( hour >= 0 & hour < 6 ~ "dawn",
-                                hour >= 6 & hour < 12 ~ "morning",
-                                hour >= 12 & hour < 18 ~ "afternoon",
-                                hour >= 18 & hour < 24 ~ "night"))
-
-
-ggplot(sanfrancrime, mapping = aes(y = timerange)) +
-  geom_bar() + facet_wrap(~ Category) + labs(
-    x = "Count",
-    y = "Time of Day",
-    title = "More Arceny/Theft, Assault and Non-Criminal Activity: the 
-    Relationship Between Category of Crime With Time of Day and Crime Count", 
-    subtitle = "Faceted by Category of Crime") + 
-  theme(axis.text = element_text(size = 6))
-
-# sanfrancrime <- sanfrancrime %>% 
-#   group_by(Category) %>% 
-#   summarise(count = n())
-# sanfrancrime
-
-```
-After constructing our visualization of crime count and time, a few things are clear: first, we can see that certain categories of crime are far more prominent than others. For example, larceny/theft is more common, along with non-criminal crimes, assault, and other crimes. Most crimes seem to happen during the afternoon and night, with the least happening in the hours from 0 to 6 (or in the early morning). 
-
-Out of all the categories of crime listed, larceny/theft is mostly conducted during the evening, or between hours 18 & 24, ie between 6pm and 12am. This makes sense, as this is usually when night begins to set in, and it's a bit darker out, thus lending to increased obscurity and decreased acuity and vision-related impairments. Overall, this visualization was quite interesting to dissect, as there does seem to be a correlation between crimes and their time of occurrence, as more crimes occur during afternoons and evenings.
-
-
-```{r map-needs-geometry}
-library(sf)
-sfran <- st_read("data/Current Police Districts-2", quiet = TRUE)
-sfran
-
-ggplot(sfran) +
-    geom_sf(color = "blue", size = 1.5, fill = "orange", alpha = 0.50) +
-    labs(title = "Current Police Districts in San Francisco Singled Out on a Map") +
-    theme_bw()
-
-plot(sfran)
-plot(sfran["shape_area"], key.pos = 4, main = "Areas of SF Districts Colored by Size")
-
-```
-
-links to use for map:
-https://www.benjaminsorensen.me/project/sf_police/ 
-https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
-https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
-
-The purpose of this faceted barplot is to show which police districts have the
-highest rate of crime, as well as the highest proportion of violent crimes.
 
 ### 3- Which PD has the highest proportion of violent crime? Kyra
 
@@ -259,41 +250,6 @@ However, Mission, Southern, and Bayview have the highest number of violent crime
 Park and Richmond both have the lowest rates and total numbers of violent crimes.
 For all police districts, the percentage of violent crimes is lower than 18%. 
 
-
-### 5- Day of the week and category? Leah
-
-```{r day of week and number of crimes}
-library(forcats)
-sanfrancrime$DayOfWeek <- factor(sanfrancrime$DayOfWeek, levels= c("Sunday", "Monday", 
-    "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
-day <- sanfrancrime%>%
-  group_by(DayOfWeek)%>%
-  mutate(cpday = n())%>%
-  select(DayOfWeek, cpday)
-day
-ggplot(data = day, mapping = aes(x = DayOfWeek)) +
-    geom_bar()  + labs(x = "Day", y = "Count",
-      title = "Number of Crimes Per Day Suggest Equal Spread of Crime") 
-```
-
-One relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. In addition to this, there is no significant pattern that sticks out as well. 
-
-```{r day and crimetype}
-important$DayOfWeek <- factor(important$DayOfWeek, levels= c("Sunday", "Monday", 
-    "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
-crimetypeday <-important%>%
-  group_by(crimetype)%>%
-  mutate(ctcount = n())
-crimetypeday
-
-ggplot(data = important, mapping = aes(x = DayOfWeek)) +
-  geom_bar(aes(fill = crimetype), position = "dodge") +
-  labs(x = "Day of the Week", y = "Count of Crime Type", 
-       title = "Overall Similar Spread of Crime Type from Day to Day",
-       fill= "Crime Type")
-```
-
-The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a relationship.
 
 
 
@@ -543,6 +499,11 @@ An important factor that this analysis is lacking is the populations of each pol
 [3] https://www.sfchronicle.com/bayarea/philmatier/article/SF-ranks-high-in-property-crime-while-it-ranks-14439369.php
 
 [4] https://ucr.fbi.gov/hate-crime/2011/resources/variables-affecting-crime 
+
+links to use for map:
+https://www.benjaminsorensen.me/project/sf_police/ 
+https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
+https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
 
 
 ### NOTES
