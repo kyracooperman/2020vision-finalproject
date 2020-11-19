@@ -29,11 +29,11 @@ However, with an overall crime rate in San Francisco that is 151% higher than
 the national average, is it also important to note that in recent years, San 
 Francisco has not been the safest place to live. The SFChronicle reported that 
 compared to 2019, "homicides increased by 21.4% in San Francisco from March to 
-June of this year,"[2]. There is a 1 in 15 chance of becoming a victim of any 
+June of this year" [2]. There is a 1 in 15 chance of becoming a victim of any 
 type of crime. A quick search about travel in San Francisco includes many 
 articles listing the "Places to Avoid After Dark" or "Most Dangerous 
 Neighborhoods in SF."With the a high possibility of any of us moving to San 
-Francisco after our time at Duke,and the recent popularity with college 
+Francisco after our time at Duke, and the recent popularity with college 
 graduates, we wanted to analyze this dataset to obtain conclusions about 
 specific factors that correlate to higher levels of crime, which will could 
 then inform us of some key insights we can keep during future travels or moves. 
