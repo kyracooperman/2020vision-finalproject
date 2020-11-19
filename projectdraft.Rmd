@@ -337,6 +337,9 @@ $\alpha$ of 0.05
 test_sanfrancrime <- important %>%
   mutate(weektype = ifelse(DayOfWeek == "Saturday" | DayOfWeek == "Sunday", "Weekend", "Weekday"),
          timerange = ifelse(hour <= 7 | hour > 19, "Nighttime", "Daylight"))
+# important%>%
+#   group_by(hour)%>%
+#   count()
 
 library(forcats)
 test_sanfrancrime <- test_sanfrancrime%>%
@@ -346,6 +349,8 @@ test_sanfrancrime <- test_sanfrancrime%>%
   mutate(timerange = factor(timerange, levels = c("Nighttime","Daylight")))
 test_sanfrancrime%>%
   select(weektype, timerange)
+
+
 
  # t.test(timerange~weektype,
  #   data = test_sanfrancrime,
@@ -543,6 +548,8 @@ it is Sunday at Night and the least when it is Thursday at Morning.
 
 # T Test
 
+The first t- test addressed the null hypothesis that crime is committed equally
+during daylight and nighttime hours on the week and weekend.
 
 
 
