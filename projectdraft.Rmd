@@ -26,13 +26,13 @@ home ability, and a (mainly) pandemic-resilient economy" that many recent
 graduates worry about during this time [1]. 
 
 However, with an overall crime rate in San Francisco that is 151% higher than 
-the national average, is it also important to note that in recent years, San 
+the national average, it is also important to note that in recent years, San 
 Francisco has not been the safest place to live. The SFChronicle reported that 
 compared to 2019, "homicides increased by 21.4% in San Francisco from March to 
 June of this year" [2]. There is a 1 in 15 chance of becoming a victim of any 
 type of crime. A quick search about travel in San Francisco includes many 
 articles listing the "Places to Avoid After Dark" or "Most Dangerous 
-Neighborhoods in SF."With the a high possibility of any of us moving to San 
+Neighborhoods in SF." With the a high possibility of any of us moving to San 
 Francisco after our time at Duke, and the recent popularity with college 
 graduates, we wanted to analyze this dataset to obtain conclusions about 
 specific factors that correlate to higher levels of crime, which will could 
@@ -259,11 +259,12 @@ ggplot(data = important, mapping = aes(x = season)) +
        Property Crime in Autumn and Winter", fill = "Crime Type", x="Season",
        y = "Count")
 ```
+
 We took a deep investigation of crime type vs day and time. This can provide insight to what individuals can possibly do to be safer. However, we also wanted to visualize this on a broader perspective and see if certain seasons had a greater amount of a certain type of crime or overall crime. After analyzing this bar plot, we can conclude that the ditribution of crime type is pretty similar across all seasons. Because this visualization is the number of crimes throughout the whole year, we are interested if the higher number of property crime in autumn and winter is significant. 
 
 # Chi-Square Test
 
-The visualization between crime type and day left us unsure if a relationship existed between these two variables. So, we will be performing a Chi-Squared test between the crime types and categorical time of day to determine if there is the relationship between them is statistically significant.
+The visualization between crime type and time of day left us unsure if a relationship existed between these two variables. So, we will be performing a Chi-Squared test between the crime types and categorical time of day to determine if there is the relationship between them is statistically significant.
 
 $H_0:$ NO relationship between the crime types created above and categories for
 time of day created above.
@@ -414,10 +415,10 @@ t.test(data = yeet,
 
 ### Number Three
 
-$H_0:$ Property crime is equally likely to occur during colder seasons Autumn and Winter than compared to other
+$H_0:$ Property crime is EQUALLY likely to occur during colder seasons Autumn and Winter than compared to other
 seasons
 
-$H_a:$ Property crime is more likely to occur during the colder seasons (Autumn and Winter)
+$H_a:$ Property crime is MORE likely to occur during the colder seasons (Autumn and Winter)
 
 $\alpha$ of 0.05
 
