@@ -88,7 +88,7 @@ geographical understanding.
 
 ### Variables
 
-We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, logistic regression model, and hypothesis tests. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening."
+We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, logistic regression model, and hypothesis tests. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening", and a variable season, which organizes the observations by what season the crime was committed in. 
 
 ```{r creating time and filtering for important variables}
 important <- sanfrancrime %>%
@@ -151,7 +151,7 @@ important <- important %>%
 
 ### Visualizations
 
-Because this dataset is directly from the San Francisco Police Department, Crime is not recorded by Neighborhood but Police District. To get a better understanding of how this may affect crime, we decided to visualize these districts as well as take a look at the number of crimes reported per district. Because there is not a clear pattern between area and crime count, we will be using proportions when analyzing crime rates from district to district.
+Because this dataset is directly from the San Francisco Police Department, Crime is not recorded by Neighborhood but Police District. To get a better understanding of how this may affect crime, we decided to visualize these districts as well as take a look at the number of crimes reported per district [5-7]. Because there is not a clear pattern between area and crime count, we will be using proportions when analyzing crime rates from district to district. 
 
 ```{r police districts}
 library(sf)
@@ -173,8 +173,7 @@ ggplot(sfran) +
   geom_point(data = important, aes(x = X, y = Y, color = crimetype), alpha = 0.5, size = .7)
 ```
 
-There's a lot of Property Crime concentrated in the Central, Northern, Southern, and Tenderloin.
-
+This visualization shows the coordinate location of every crime committed. There is a high concentration of crime in the Northeast region of San Francisco. Comparing this to our first map can further tell us that Tenderloin, Central, Northern, and Mission are the districts where this concentration is. Property seems to be the most common crime followed by Miscellaneous and then Violent Crime. However, this cannot be proven just from this visualization, so we need to visualize more factors. 
 
 ```{r day of week and number of crimes}
 library(forcats)
@@ -190,7 +189,7 @@ ggplot(data = day, mapping = aes(x = DayOfWeek, fill = DayOfWeek)) +
       title = "Number of Crimes Per Day Suggest Similar Spread of Crime") 
 ```
 
-The first relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. Because this recorded over a whole year, it may be important to identify that Friday has the highest number of crimes while Sunday has the least, but overall there is no significant pattern that sticks out.
+The next relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. Because this recorded over a whole year, it may be important to identify that Friday has the highest number of crimes while Sunday has the least, but overall there is no significant pattern that sticks out.
 
 
 ```{r day and crimetype}
@@ -207,8 +206,8 @@ ggplot(data = important, mapping = aes(x = DayOfWeek)) +
        fill= "Crime Type")
 ```
 
-Because of the fairly equal distribution of crime by day, we decided to delver further by comparing each crime type by day. 
-The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a similar pattern of frequency. This further supports the observation from the previous visualization where crime and day of the week do not necessarily have a strong relationship.
+Because of the fairly equal distribution of crime by day, we decided to delve further by comparing each crime type by day. 
+The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a relatively similar pattern of frequency. However, we cannot be sure if this is the case because of the variations in distribution that are present. 
 
 
 ```{r colored-visualizations}
@@ -223,11 +222,6 @@ ggplot(data = important, mapping = aes(x = timerange)) +
 ```
 
 This then led us to the possibility that although day of the week may not have much of a relationship, this does not completely outrule time as a factor in how a crime takes places. We visualized this by creating a bar graph comparing frequency of crime and time of day. The visualization proves that there is a clear difference in what part of the day that crime is committed. The greatest amount of property crime occurs during the night, followed by the afternoon. Overall, the latter half of the day is when a higher amount of crime is committed.
-
-###CHANGE DESCRIPTION
-
-
-### 2 - Which PD has the highest proportion of violent crime?
 
 ```{r PD vs Violent Crime}
 
@@ -254,13 +248,8 @@ ggplot(important3, aes(x = PdDistrict, fill = yes_violent))+
          "Ingleside, Bayview, and Tenderloin Have Highest Violent Crime Rates ",
        y = "Proportion of Violent Crimes", x = "Police District", fill = "Violent Crime")
 ```
-By looking at the table and bar plot, it is clear that Ingleside, Bayview, and 
-Tenderloin have the highest rates of violent crime.
 
-However, Mission, Southern, and Bayview have the highest number of violent crimes.
-Park and Richmond both have the lowest rates and total numbers of violent crimes.
-For all police districts, the percentage of violent crimes is lower than 18%. 
-
+Followed by property and miscellaneous crime, violent crime was the most prevalent type of crime committed. Because violent crime typically indicates a worse degree of crime, we believed this would be an interesting relatonship to analyze. By looking at the table and bar plot, it is clear that Ingleside, Bayview, and Tenderloin have the highest rates of violent crime. However, Mission, Southern, and Bayview have the highest number of violent crimes. Park and Richmond both have the lowest rates and total numbers of violent crimes. For all police districts, the percentage of violent crimes is lower than 18%. 
 
 ```{r winter_autumn}
 important$season <- factor(important$season, levels= c("spring", "summer", "autumn", "winter"))
@@ -269,16 +258,12 @@ ggplot(data = important, mapping = aes(x = season)) +
   labs(title = "Distribution of Crime Suggests More 
        Property Crime in Autumn and Winter", fill = "Crime Type", x="Season",
        y = "Count")
-
-# add title
 ```
+We took a deep investigation of crime type vs day and time. This can provide insight to what individuals can possibly do to be safer. However, we also wanted to visualize this on a broader perspective and see if certain seasons had a greater amount of a certain type of crime or overall crime. After analyzing this bar plot, we can conclude that the ditribution of crime type is pretty similar across all seasons. Because this visualization is the number of crimes throughout the whole year, we are interested if the higher number of property crime in autumn and winter is significant. 
 
 # Chi-Square Test
 
-#Mihir
-We will be performing a Chi-Squared test between these
-crime types and categorical time of day to determine if there is the relationship between them is 
-statistically significant.
+The visualization between crime type and day left us unsure if a relationship existed between these two variables. So, we will be performing a Chi-Squared test between the crime types and categorical time of day to determine if there is the relationship between them is statistically significant.
 
 $H_0:$ NO relationship between the crime types created above and categories for
 time of day created above.
@@ -341,7 +326,8 @@ chisq.test(table)
 
 # Logistic Regression
 
-By using logistic regression, we hope to answer the question of how much more
+Violent crime typically presents the greatest amount of danger, so by using 
+logistic regression, we hope to answer the question of how much more
 likely a violent crime is to occur depending on the time range of the crime
 committed. This model below shows the predicted proportion of crimes that are
 violent given the predictor of time range. The three time ranges used are
@@ -518,27 +504,38 @@ If we were to continue work on the project, we would add to our analysis by intr
 
 ### REFERENCES
 
-[1] https://poetsandquantsforundergrads.com/2020/05/15/are-these-the-50-best-metro-areas-for-recent-college-grads/
+[1] Allen, Nathan. “Are These The 50 Best Metro Areas For Recent College Grads?”
+Poets&Quants for Undergrads, 15 May 2020, poetsandquantsforundergrads.com/2020
+/05/15/are-these-the-50-best-metro-areas-for-recent-college-grads/.
 
-[2] https://www.sfchronicle.com/bayarea/article/Which-crimes-are-up-down-in-SF-during-15408485.php
+[2] Hwang, Kellie. “Amid the Pandemic, Overall Crime in SF Is down. But These 
+Crimes Are Up.” SFChronicle.com, San Francisco Chronicle, 15 July 2020, www.sfchronicle.com/bayarea/article/Which-crimes-are-up-down-in-SF-during-
+15408485.php.
+  
+[3] Matier, Phil. “SF Ranks High in Property Crime While It Ranks Low in Arrests
+.” SFChronicle.com, San Francisco Chronicle, 15 Sept. 2019, www.sfchronicle.com/bayarea/philmatier/article/SF-ranks-high-in-property-crime-
+while-it-ranks-14439369.php.
 
-[3] https://www.sfchronicle.com/bayarea/philmatier/article/SF-ranks-high-in-property-crime-while-it-ranks-14439369.php
+[4] “Variables Affecting Crime.” FBI, FBI, 5 Nov. 2012, ucr.fbi.gov/hate-crime/
+2011/resources/variables-affecting-crime.
 
-[4] https://ucr.fbi.gov/hate-crime/2011/resources/variables-affecting-crime 
-
-
-### LINKS USED FOR SF MAP:
-https://www.benjaminsorensen.me/project/sf_police/ 
-https://data.sfgov.org/Public-Safety/Current-Police-Districts/wkhw-cjsf 
-https://r-spatial.github.io/sf/articles/sf5.html#geometry-with-attributes-sf-1 
+[5] “5. Plotting Simple Features.” Sf, r-spatial.github.io/sf/articles/sf5.ht
+  ml#geometry-with-attributes-sf-1.
+  
+[6] Benjamin Chang Sorensen. “Policing Trends in San Francisco.” Benjamin 
+  Chang Sorensen, 29 June 2018, www.benjaminsorensen.me/project/sf_police/. 
+  
+[7] “Current Police Districts: DataSF: City and County of San Francisco.” San 
+  Francisco Data, data.sfgov.org/Public-Safety/Current-Police-Districts/wk
+  hw-cjsf.
 
 
 ### TO DO LIST 
 
-- t test results and analsyis done TINA 
-- justifications methodology  LEAH
+- t test results and analysis TINA done 
+- justifications methodology  LEAH done
 - results add coefficient interpretations KYRA & MIHIR
 - add regression model significance in discussion KYRA
 - Discussion - organize it, add conclusion TINA done
-- References - LEAH
+- References - LEAH done
 - SLIDES - LEAH, TINA
