@@ -41,24 +41,23 @@ then inform us of some key insights we can keep during future travels or moves.
 Through our research, we plan to investigate what factors the general population
 can associate with local crime in order to be the safest while in San Francisco.
 Our main hypotheses are 1) a later time (e.g. nighttime hours) correlates to a 
-higher level or rate of crime and 2) Location is correlated to levels of crime. 
-We believe it is important to investigate this question because 
-there likely are policy changes that can be implemented to increase safety
-throughout the city. Our investigation will shine light on potential patterns
-of crime.
-
-For example,if there is a strong correlation between night and rate of crime, then 
-is there a correlation between which night of the week (ex. Sunday night) and 
+higher level or rate of crime and 2) certain crimes are more prevalent during 
+different times of the year. For example,if there is a strong correlation 
+between night and rate of crime, then is there a correlation between which night
+of the week (ex. Sunday night) and 
 rate of crime? With location, are there certain districts that have a specific 
 crime that is common there? By delving further and examining these 
 relationships, we will be able to understand if crime has any specific pattern 
-in San Francisco. 
+in San Francisco. We believe it is important to investigate this 
+question because there likely are policy changes that can be implemented to 
+increase safety throughout the city. Our investigation will shine light on
+potential patterns of crime. 
 
 In order to assess these hypotheses, we will look at the following relationships:
   1. Relationship between crime type and time
   2. Relationship between crime and time
   3. Relationship between violent crimes and police district
-  4. Relationship between days of the week and crime
+  4. Relationship between seasons and crime type
 
 ```{r dataglimpse}
 set.seed(1)
@@ -88,7 +87,14 @@ geographical understanding.
 
 ### Variables
 
-We will analyze the validity of our hypotheses using various statistical methods, including a Chi-square test, logistic regression model, and hypothesis tests. The main variables we will be using in our analysis are Category, DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables to assist us in our data. This includes the variable timerange, that organizes the hour of the day into four times of day "night", "morning", "day", and "evening", and a variable season, which organizes the observations by what season the crime was committed in. 
+We will analyze the validity of our hypotheses using various statistical 
+methods, including a Chi-square test, logistic regression model, and hypothesis 
+tests. The main variables we will be using in our analysis are Category, 
+DayOfWeek, Date, Time, PdDistrict, and Resolution. We also created new variables
+to assist us in our data. This includes the variable timerange, that organizes 
+the hour of the day into four times of day "night", "morning", "day", and 
+"evening", and a variable season, which organizes the observations by what 
+season the crime was committed in. 
 
 ```{r creating time and filtering for important variables}
 important <- sanfrancrime %>%
@@ -111,7 +117,11 @@ important <- important %>%
                             month == 12 | month == 1 | month == 2 ~ 'winter'))
 ```
 
-We also decided to categorize the all of the different types of crime that were reported. We organized the 39 types of crimes into variable crimetype, which consists of "Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", "Legal Violation", and "Miscellaneous". It is also important to note that we will also be analyzing crime in the context of whether it was violent or not.
+We also decided to categorize the different types of crime that were reported. 
+We organized the 39 types of crimes into variable crimetype, which consists of 
+"Property", "Violent", "White Collar", "Drug/Alcohol", "Sex", "Suspicious", 
+"Legal Violation", and "Miscellaneous". It is also important to note that we 
+will be analyzing crime in the context of whether it was violent or not. 
 
 ```{r categorizing crime by type}
 important <- important %>% 
@@ -151,7 +161,12 @@ important <- important %>%
 
 ### Visualizations
 
-Because this dataset is directly from the San Francisco Police Department, Crime is not recorded by Neighborhood but Police District. To get a better understanding of how this may affect crime, we decided to visualize these districts as well as take a look at the number of crimes reported per district [5-7]. Because there is not a clear pattern between area and crime count, we will be using proportions when analyzing crime rates from district to district. 
+Because this data is from the San Francisco Police Department, Crime is not 
+recorded by neighborhood but police district. To get a better understanding of 
+how this may affect crime, we decided to visualize these districts as well as 
+take a look at the number of crimes reported per district [5-7]. Because there 
+is not a clear pattern between area and crime count, we will be using 
+proportions when analyzing crime rates from district to district. 
 
 ```{r police districts}
 library(sf)
@@ -165,7 +180,7 @@ sanfrancrime%>%
   count()
 ```
 
-```{r map-of-SF}
+```{r map-of-SF-with-crime-plotted}
 ggplot(sfran) +
     geom_sf(color = "black", size = .5, fill = "#F5F2D0") +
      labs(title = "Current Police Districts in San Francisco With Crime in Color",
@@ -173,7 +188,13 @@ ggplot(sfran) +
   geom_point(data = important, aes(x = X, y = Y, color = crimetype), alpha = 0.5, size = .7)
 ```
 
-This visualization shows the coordinate location of every crime committed. There is a high concentration of crime in the Northeast region of San Francisco. Comparing this to our first map can further tell us that Tenderloin, Central, Northern, and Mission are the districts where this concentration is. Property seems to be the most common crime followed by Miscellaneous and then Violent Crime. However, this cannot be proven just from this visualization, so we need to visualize more factors. 
+This visualization shows the coordinate location of every crime committed. There
+is a high concentration of crime in the Northeast region of San Francisco. 
+Comparing this to our first map can tell us that Tenderloin, Central, Northern, 
+and Mission are the districts where this concentration is. Property seems to be 
+the most common crime followed by Miscellaneous and then Violent Crime. However,
+this cannot be proven just from this visualization, so we need to visualize more
+factors. 
 
 ```{r day of week and number of crimes}
 library(forcats)
@@ -189,7 +210,14 @@ ggplot(data = day, mapping = aes(x = DayOfWeek, fill = DayOfWeek)) +
       title = "Number of Crimes Per Day Suggest Similar Spread of Crime") 
 ```
 
-The next relationship we were interested in was if certain days had a higher rates of crime. We visualized this relationship by creating a bar graph that compares the day of the week and number of crimes each day during this time period. By looking at the visual, we are able to see that each has a relatively similar crime count compared to the other. Because this recorded over a whole year, it may be important to identify that Friday has the highest number of crimes while Sunday has the least, but overall there is no significant pattern that sticks out.
+The next relationship we were interested in was if certain days had a higher 
+rates of crime. We visualized this relationship by creating a bar graph that 
+compares the day of the week and number of crimes each day. By looking at the 
+visual, we are able to see that each has a relatively similar crime count 
+compared to the other. Because this recorded over a whole year, it may be 
+important to identify that Friday has the highest number of crimes while 
+Sunday has the least, but overall there is no significant pattern that sticks 
+out.
 
 
 ```{r day and crimetype}
@@ -206,22 +234,36 @@ ggplot(data = important, mapping = aes(x = DayOfWeek)) +
        fill= "Crime Type")
 ```
 
-Because of the fairly equal distribution of crime by day, we decided to delve further by comparing each crime type by day. 
-The faceted bar graph shows the frequency of each crime rate on a given day of the week. When looking at the visualization, it is easy to see the large difference between types of crime that exist. On each day, the number of property related crimes and miscellaneous crimes are significantly greater than the 5 other crime types. When looking at the frequency of crime types from day to day, every day has a relatively similar pattern of frequency. However, we cannot be sure if this is the case because of the variations in distribution that are present. 
+Because of the fairly equal distribution of crime by day, we decided to delve 
+further by comparing each crime type by day. 
+The faceted bar graph shows the frequency of each crime rate on a given day of 
+the week. When looking at the visualization, it is easy to see a large 
+difference between types of crime that exist. On each day, the number of 
+property related crimes and miscellaneous crimes are significantly greater than 
+the 5 other crime types. When looking at the frequency of crime types from day 
+to day, every day has a relatively similar pattern of frequency. However, 
+because of the variations in distribution throughout the week, we will be 
+further investigating this relationship. 
 
-
-```{r colored-visualizations}
+```{r crimetype time of day}
 
 important$timerange <- factor(important$timerange, levels= c("dawn", "morning", "afternoon", "night")) 
 ggplot(data = important, mapping = aes(x = timerange)) +
   geom_bar(aes(fill = crimetype), position = "dodge") +
   labs(x = "Time of the Day", y = "Count", 
        title = "The Most Property Crime Occurs in the Latter Half of the Day",
-       subtitle = "TThe Most Violent Also Crime Occurs in the Latter Half of the Day",
+       subtitle = "The Most Violent Also Crime Occurs in the Latter Half of the Day",
        fill= "Crime Type")
 ```
 
-This then led us to the possibility that although day of the week may not have much of a relationship, this does not completely outrule time as a factor in how a crime takes places. We visualized this by creating a bar graph comparing frequency of crime and time of day. The visualization proves that there is a clear difference in what part of the day that crime is committed. The greatest amount of property crime occurs during the night, followed by the afternoon. Overall, the latter half of the day is when a higher amount of crime is committed.
+This then led us to the possibility that although day of the week may not have 
+much of a relationship, this does not completely outrule time as a factor in how
+a crime takes places. We visualized this by creating a bar graph comparing 
+frequency of crime and time of day. The visualization proves that there is a 
+clear difference in what part of the day that crime is committed. The greatest 
+amount of property crime occurs during the night, followed by the afternoon. 
+Overall, the latter half of the day is when a higher amount of crime is 
+committed.
 
 ```{r PD vs Violent Crime}
 
@@ -249,9 +291,17 @@ ggplot(important3, aes(x = PdDistrict, fill = yes_violent))+
        y = "Proportion of Violent Crimes", x = "Police District", fill = "Violent Crime")
 ```
 
-Followed by property and miscellaneous crime, violent crime was the most prevalent type of crime committed. Because violent crime typically indicates a worse degree of crime, we believed this would be an interesting relatonship to analyze. By looking at the table and bar plot, it is clear that Ingleside, Bayview, and Tenderloin have the highest rates of violent crime. However, Mission, Southern, and Bayview have the highest number of violent crimes. Park and Richmond both have the lowest rates and total numbers of violent crimes. For all police districts, the percentage of violent crimes is lower than 18%. 
+Followed by property and miscellaneous crime, violent crime was the most 
+prevalent type of crime committed. Because violent crime typically indicates a 
+worse degree of crime, we believed this would be an interesting relatonship to 
+analyze. By looking at the table and bar plot, it is clear that Ingleside, 
+Bayview, and Tenderloin have the highest rates of violent crime. However, 
+Mission, Southern, and Bayview have the highest number of violent crimes. 
+Park and Richmond both have the lowest rates and total numbers of violent 
+crimes. For all police districts, the percentage of violent crimes is lower than
+18%. 
 
-```{r winter_autumn}
+```{r crime type and season}
 important$season <- factor(important$season, levels= c("spring", "summer", "autumn", "winter"))
 ggplot(data = important, mapping = aes(x = season)) +
   geom_bar(aes(fill = crimetype), position = "dodge") + 
@@ -260,21 +310,31 @@ ggplot(data = important, mapping = aes(x = season)) +
        y = "Count")
 ```
 
-We took a deep investigation of crime type vs day and time. This can provide insight to what individuals can possibly do to be safer. However, we also wanted to visualize this on a broader perspective and see if certain seasons had a greater amount of a certain type of crime or overall crime. After analyzing this bar plot, we can conclude that the ditribution of crime type is pretty similar across all seasons. Because this visualization is the number of crimes throughout the whole year, we are interested if the higher number of property crime in autumn and winter is significant. 
+We took a deep investigation of crime type vs day and time. This can provide 
+insight to what individuals can possibly do to be safer. However, we also wanted
+to visualize this on a broader perspective and see if certain seasons had a 
+greater amount of a certain type of crime or overall crime. After analyzing this
+bar plot, we can conclude that the distribution of crime type is similar across 
+all seasons. However, because this visualization is the number of crimes 
+throughout the whole year, we are interested if the higher number of property 
+crime in autumn and winter is significant. 
 
 # Chi-Square Test
 
-The visualization between crime type and time of day left us unsure if a relationship existed between these two variables. So, we will be performing a Chi-Squared test between the crime types and categorical time of day to determine if there is the relationship between them is statistically significant.
+The visualization between crime type and time of day left us unsure if a 
+relationship existed between these two variables. So, we will be performing a 
+Chi-Squared test between the crime types and categorical time of day to 
+determine if there is the relationship between them is statistically significant.
 
-$H_0:$ NO relationship between the crime types created above and categories for
-time of day created above.
+$H_0:$ There is NO relationship between the crime type and categories for
+time of day.
 
-$H_a:$ There IS a relationship between the crime types created above and 
-categories for time of day created above.
+$H_a:$ There IS a relationship between the crime type and 
+categories for time of day.
  
 $\alpha$ of 0.05
 
-```{r chi-squared time}
+```{r chi-squared test for crime type and timerange}
 
 crimecount <- important %>%
   count(crimetype)
@@ -330,15 +390,10 @@ chisq.test(table)
 Violent crime typically presents the greatest amount of danger, so by using 
 logistic regression, we hope to answer the question of how much more
 likely a violent crime is to occur depending on the time range of the crime
-committed. This model below shows the predicted proportion of crimes that are
-violent given the predictor of time range. The three time ranges used are
-evening, morning, and night. We hypothesize that the highest proportion of 
-violent crimes will occur at night because there are typically fewer witnesses
-at these hours. 
-
-Before using logistic regression, we checked that the necessary conditions of
-linearity, independence, normality, and equal variance were met. 
-
+committed. These models below show the predicted proportion of violent crimes 
+and property crimes given the predictor of time range. The four time ranges 
+used are dawn, morning, afternoon, and night. Before using regression, we 
+checked that the necessary conditions were met. 
 
 ```{r logistic model}
 condensed <- important %>% 
@@ -367,13 +422,17 @@ for the CLT to apply. We are using t-distribution because we are testing a
 single sample's population mean and we don't know the true population SD.
 
 
-### Number One 
+### t test for Violent Crime
 
-The logistic regression predicted that the combination of Saturday and Dawn would have the greatest likelihood of a violent crime occurring. As a result, we are exploring the significance of this relationship with a t-test.
+The logistic regression predicted that the combination of Saturday and Dawn 
+would have the greatest likelihood of a violent crime occurring. As a result, 
+we are exploring the significance of this relationship with a t-test.
 
-$H_0$: Saturdays at Dawn have the SAME likelihood of a violent crime occurring as the sample population.
+$H_0$: Saturdays at Dawn have the SAME likelihood of a violent crime occurring 
+as the sample population.
 
-$H_a$: Saturdays at Dawn have a GREATER likelihood of a violent crime occurring than the sample population.
+$H_a$: Saturdays at Dawn have a GREATER likelihood of a violent crime occurring 
+than the sample population.
 
 $\alpha$ of 0.05    
 
@@ -389,15 +448,17 @@ t.test(data = pls,
        ver.equal = FALSE)
 ```
 
+### t test for Property Crime
 
+The logistic regression predicted that the combination of Sunday and Night would
+have the greatest likelihood of a property crime occurring. As a result, we are 
+exploring the significance of this relationship with a t-test.
 
-### Number Two 
+$H_0$: Sunday at Night have the SAME likelihood of a property crime occurring as
+the sample population.
 
-The logistic regression predicted that the combination of Sunday and Night would have the greatest likelihood of a property crime occurring. As a result, we are exploring the significance of this relationship with a t-test.
-
-$H_0$: Sunday at Night have the SAME likelihood of a property crime occurring as the sample population.
-
-$H_a$: Saturdays at Night have a GREATER likelihood of a property crime occurring than the sample population.
+$H_a$: Saturdays at Night have a GREATER likelihood of a property crime 
+occurring than the sample population.
 
 $\alpha$ of 0.05    
 
@@ -413,12 +474,14 @@ t.test(data = yeet,
        ver.equal = FALSE)
 ```
 
-### Number Three
+### t test for Property Crime in Autumn and Winter
 
-$H_0:$ Property crime is EQUALLY likely to occur during colder seasons Autumn and Winter than compared to other
+$H_0:$ Property crime is EQUALLY likely to occur during colder seasons Autumn 
+and Winter than compared to other
 seasons
 
-$H_a:$ Property crime is MORE likely to occur during the colder seasons (Autumn and Winter)
+$H_a:$ Property crime is MORE likely to occur during the colder seasons 
+(Autumn and Winter)
 
 $\alpha$ of 0.05
 
@@ -433,7 +496,6 @@ t.test(data = summercheck,
        alternative = "less",
        ver.equal = FALSE)
 ```
-
 
 ### RESULTS
 
@@ -455,7 +517,15 @@ Predicted logit(p) = -1.524 - 0.071* (Mon.) - 0.021* (Tues.) - 0.114* (Wed.) -
 0.145* (Thur.) - 0.148* (Fri.) + 0.079 * (Sat.) - 0.471* (morning) -
 0.608* (afternoon) - 0.381* (night)
 
-The reference level (not sure if that’s the correct term) is Sunday at Dawn. While holding the day of the week constant, the log odds of a violent crime occuring decreases by 0.471 if morning, 0.608 if afternoon, and 0.381 if it is night. While holding the time range of the day constant, the log odds of a violent crime occuring decreases by 0.071 if Monday, 0.021 if Tuesday, 0.114 if Wednesday, 0.145 if Thursday, and 0.148 if it is Friday. However, the log-odds increase by 0.079 if it is Saturday. According to the model, the log-odds of a violent crime occuring is greatest when it is Saturday at Dawn and the least when it is Friday at Afternoon.
+The reference level is Sunday at Dawn. While holding the day of the week 
+constant, the log odds of a violent crime occurring decreases by 0.471 if 
+morning, 0.608 if afternoon, and 0.381 if it is night. While holding the time 
+range of the day constant, and on average, the log odds of a violent crime 
+occurring decreases by 0.071 if Monday, 0.021 if Tuesday, 0.114 if Wednesday, 
+0.145 if Thursday, and 0.148 if it is Friday. However, the log-odds increase by 
+0.079 if it is Saturday. According to the model, the log-odds of a violent crime
+occurring is greatest when it is Saturday at Dawn and the least when it is 
+Friday at Afternoon.
 
 For Property Crime: 
 
@@ -463,43 +533,150 @@ Predicted logit(p) = -0.324 - 0.058* (Mon.) - 0.107* (Tues.) - 0.140* (Wed.) -
 0.287* (Thur.) - 0.093* (Fri.) - 0.048* (Sat.) - 0.006* (morning) +
 0.109* (afternoon) + 0.505* (night)
 
-The reference level (not sure if that’s the correct term) is Sunday at Afternoon. While holding the day of the week constant, the log odds of a violent crime occuring decreases by 0.006 it is morning. However, the log-odds increase by 0.109 if afternoon and 0.505 if it is night. While holding the time range of the day constant, the log odds of a violent crime occuring decreases by -0.058 if Monday, -0.107 if Tuesday, -0.140 if Wednesday, -0.287 if Thursday, -0.093 if Friday, and -0.048 if it is Saturday. According to the model, the log-odds of a violent crime occuring is greatest when it is Sunday at Night and the least when it is Thursday at Morning.
+The reference level is Sunday at Dawn. While holding the day of the week 
+constant, the log odds of a violent crime occurring decreases by 0.006 it is 
+morning. However, the log-odds increase by 0.109 if afternoon and 0.505 if it is
+night. While holding the time range of the day constant, and on average, the log
+odds of a violent crime occurring  decreases by -0.058 if Monday, -0.107 if 
+Tuesday, -0.140 if Wednesday, -0.287 if Thursday, -0.093 if Friday, and -0.048 
+if it is Saturday. According to the model, the log-odds of a violent crime 
+occurring is greatest when it is Sunday at Night and the least when it is 
+Thursday at Morning.
 
 
 ### Hypothesis Tests
 
-### Test Number 1's Analysis
-After creating our visualizations, we noticed that Saturday at dawn seemed to be a point of significance; thus, we wanted to see if the predicted target (Saturday at dawn) truly had a greater likelihood of violent crime occurring than the sample population.
+### t test for Violent Crime
+After creating our visualizations, we noticed that Saturday at dawn seemed to be
+a point of significance; thus, we wanted to see if the predicted target 
+(Saturday at dawn) truly had a greater likelihood of violent crime occurring 
+than the sample population.
 
 t = -5.0675, degrees of freedom = 381.07.
 
-Our p-value < 3.149e-07, so we reject the null hypothesis at the alpha = 0.05 significance level. Thus there is sufficient evidence to suggest that predicted target (Saturday at dawn) has a GREATER likelihood of violent crime occurring than the sample population, which confirmed our suspicions. On a policy standpoint, this means that it might be a good idea to add more police on site during dawn hours on Saturdays in particular to be able to effectively resolve and prevent crime. 
+Our p-value < 3.149e-07, so we reject the null hypothesis at the $\alpha$  = 
+0.05 significance level. Thus there is sufficient evidence to suggest that 
+predicted target (Saturday at dawn) has a GREATER likelihood of violent crime 
+occurring than the sample population, which confirmed our suspicions. 
 
-### Test Number 2's Analysis
-After creating our visualizations, we noticed that Sunday nights seemed to be a time of significance. We wanted to further explore and see if this predicted target truly had a greater likelihood of violent crime occurring than the sample population.
+### t test for Property Crime
+After creating our visualizations, we noticed that Sunday nights seemed to be a 
+time of significance. We wanted to further explore and see if this predicted 
+target truly had a greater likelihood of violent crime occurring than the sample
+population.
 
-t = -2.6675, degrees of freedom = 622.8. Our p-value is 0.00392, so we reject the null hypothesis at the alpha = 0.05 significance level. Thus there is sufficient evidence to suggest that our predicted target of Sunday nights truly had a greater likelihood of violent crime occurring than the sample population, which confirmed our suspicions. Intuitively, this makes sense, as nighttime hours lends itself to additional obscurity. On a policy standpoint, it might be a good idea to add more police on Sunday nights to be able to effectively resolve and prevent crime. 
+t = -2.6675, degrees of freedom = 622.8. Our p-value is 0.00392, so we reject 
+the null hypothesis at the $\alpha$  = 0.05 significance level. Thus there is 
+sufficient evidence to suggest that our predicted target of Sunday nights truly 
+had a greater likelihood of violent crime occurring than the sample population, 
+which confirmed our suspicions. Intuitively, this makes sense, as nighttime 
+hours lends itself to additional obscurity.
 
-### Test Number 3's Analysis
-In our visualization relating to seasonal differences and SF crime, we noticed that winter seasons seemed to have more crime. Thus, we wanted to further explore and see if property crime is more likely to occur in the colder seasons (Autumn and Winter).
+### t test for Property Crime in Autumn and Winter
+In our visualization relating to seasonal differences and SF crime, we noticed 
+that winter seasons seemed to have more crime. Thus, we wanted to further 
+explore and see if property crime is more likely to occur in the colder seasons 
+(Autumn and Winter).
 
-t = -2.4695, degrees of freedom = 14996. Our p-value is 0.006771, so we reject the null hypothesis at the alpha = 0.05 significance level. Thus there is sufficient evidence to suggest that property crime is more likely to occur in the colder seasons (Autumn and Winter), which confirmed our suspicions. 
-
+t = -2.4695, degrees of freedom = 14996. Our p-value is 0.006771, so we reject 
+the null hypothesis at the $\alpha$  = 0.05 significance level. Thus there is 
+sufficient evidence to suggest that property crime is more likely to occur in 
+the colder seasons (Autumn and Winter), which confirms one of our main 
+hypotheses.
 
 
 ### DISCUSSION
 
-When trying to be safest in the busy city of San Francisco, we discovered through our analysis that certain measures can be taken to improve one's safety. This is proven by the multiple factors that influence where, what, and when crime is committed. However, it might first be important to discuss which factors do not play a substantial role in the act of a crime. For example, when looking at the bar graph comparing day of the week and number of crimes, it is clear that the difference from day to day is very minimal. Therefore, looking at just the day itself should not be a factor to whether it may be more dangerous or not. Looking at the visualization comparing type of crime and day of week furthers the point that the day of the week does not play a significant role on crime. Each day has a spread where Property Crime is the highest, followed by Miscellaneous Crime, followed by Violent Crime. Something that could cause a possible influence in our data is the fact that the variable crime type was by us, so the organization of what crime fits into what category and the creation of categories is based on our research and knowledge. 
+When trying to be safest in the busy city of San Francisco, we discovered 
+through our analysis that certain measures can be taken to improve one's safety.
+This is proven by the multiple factors that influence where, what, and when 
+crime is committed. However, it might first be important to discuss which 
+factors do not play a substantial role in the act of a crime. For example, when 
+looking at the bar graph comparing day of the week and number of crimes, it is 
+clear that the difference from day to day is very minimal. Therefore, looking at
+just the day itself should not be a factor to whether it may be more dangerous 
+or not. However, looking at the visualization comparing type of crime and day of
+week shows that each day has a spread where Property Crime is the highest, 
+followed by Miscellaneous Crime, followed by Violent Crime. Something that could
+cause a possible influence in our data is the fact that the variable crime type 
+was created by us, so the organization of what crime fits into what category and
+the creation of categories is based on our research and knowledge. 
 
-In addition, after creating categorical variables for time of day and also categorizing the types of crime within larger categories, we determined that there was a statistically significant relationship between the time of day and type of crime. As a result, we created a logistic model to calculate the log-odds of whether a violent crime occurred with the predictors of day of the week and time of day. We also created a model with the same predictors for property crime. However, this model cannot be applied to all cities; the base concept should remain the same. Most cities will have likely have crime peak during the night and during the weekends because more people will not be home.
+In addition, after creating categorical variables for time of day and also 
+categorizing the types of crime within larger categories, we determined that 
+there was a statistically significant relationship between the time of day and 
+type of crime. As a result, we created a logistic model to calculate the 
+log-odds of whether a violent crime occurred with the predictors of day of the 
+week and time of day. We also created a model with the same predictors for 
+property crime. These two models predicted that violent crime was most likely to
+occur on Saturday at dawn and property crime Sunday nights. We then proved these
+predictors by conducting hypothesis test and concluded a statistically 
+significant p-value. Based on this, residents can be advised to avoid leaving 
+their homes during the early hours of Saturday as well as investing in home 
+security or surveillance to prevent or catch possible crime to their property. 
+In addition, this conclusion can help inform police districts of how to better 
+use their resources to be more efficient. However, this model cannot be applied 
+to all cities; the base concept should remain the same. Cities with similar 
+infrastructure, economic level, etc. will likely have crime peak during the 
+night and during the weekends like that of San Francisco. The last hypothesis 
+test proved that Autumn and Winter had a significant increase in crime versus 
+the other two seasons. This information can be used to find different trends 
+during this time and possibly implement different practices such as seasonal 
+hiring of officers. 
 
-The bar graph that shows crime rates and violent crime proportions that is faceted by police districts shows valuable insight as to which police districts are faced with the highest crime rates. The police districts of Tenderloin, Bayview, and Ingleside have the highest percentages of violent crime, while Park and Richmond were both consistent in having the lowest proportion of violent crimes. Noting the success of these districts in maintaining low levels of crimes, it could be beneficial to restructure other districts to mirror their practices.
+The bar graph that shows crime rates and violent crime proportions that is 
+faceted by police districts shows valuable insight as to which police districts
+are faced with the highest crime rates. The police districts of Tenderloin, 
+Bayview, and Ingleside have the highest percentages of violent crime, while 
+Park and Richmond were both consistent in having the lowest proportion of 
+violent crimes. Noting the success of these districts in maintaining low 
+levels of crimes, it could be beneficial to restructure other districts to
+mirror their practices.
 
-An important factor that this analysis is lacking is the populations of each police district. Having a larger population size would likely contribute to greater numbers of crime, even if per capita crime is lower. This information is not present in the dataset we used, but would be necessary to extrapolate a greater conclusion regarding which police district is most dangerous. Given that factors such as poverty level and unemployment rates are main drivers for crime [1], it would be valuable to assess these numbers for each police district. It would also be important to know the differences in these factors for districts with more and less crime so that next steps can be taken to lower crime rates. For example, should a future study conclude that Park’s public education system has higher test scores than that of Bayview, improving schools could be the best step for mitigating crime.
+An important factor that this analysis is lacking is the populations of each 
+police district. Having a larger population size would likely contribute to 
+greater numbers of crime, even if per capita crime is lower. This information 
+is not present in the dataset we used, but would be necessary to extrapolate a
+greater conclusion regarding which police district is most dangerous. Given 
+that factors such as poverty level and unemployment rates are main drivers for 
+crime [1], it would be valuable to assess these numbers for each police 
+district. It would also be important to know the differences in these factors 
+for districts with more and less crime so that next steps can be taken to lower
+crime rates. For example, should a future study conclude that Park’s public 
+education system has higher test scores than that of Bayview, improving schools
+could be the best step for mitigating crime.
 
-From a policy standpoint, government leaders in San Francisco should consider having additional police on duty during the times when crime is more eminent (afternoon and night). Another course of action could be to simply hire more police trained in Larceny, Theft, and Assault, as they were the most prominent from the graphs. Again, we understand that we cannot extrapolate our analysis to every city; however, our conclusions will be generalizable to similar cities to a moderate degree. Other cities with similar infrastructure and economic conditions are more likely to utilize the analysis we've found — this analysis will not be applicable to Durham, NC, for example, because of the population density and overall difference in cities (SF is a bustling city, while Durham is a smaller, quaint town).  
+From a policy standpoint, government leaders in San Francisco could consider 
+having additional police on duty during the times when crime is more eminent 
+(afternoon and night). However, this is only one possible solution. More 
+research could find that times where crime is more eminent is not a result 
+of less police on duty, but a varity of other factors that are not included in
+this dataset. Because of this, there is number of solutions that could help 
+lessen crime during these times. While an increase in police surveillance could 
+also result in a decreasse of property crime, this is not necessarily the same 
+for violent crime as more police on duty could cause more crimes to be reported. 
 
-If we were to continue work on the project, we would add to our analysis by introducing data from different cities that are comparable to San Francisco. It would be interesting to see the parallels in crime rates, as for many college students, traveling to their first job post-grad will be their first taste of independence and financial freedom -- thus, safety is an important factor to take into consideration. Ultimately, expanding the population of interest to citizens in multiple cities would give a better picture of how cases of crime occur differently by region, state, country, or population density (urban vs. rural). Second, we would also adjust for additional potential confounding variables to improve the accuracy of our analysis and models. Finally, to learn more, we'd want to speak with current or past residents and police officers about their first-hand local experiences with crime. Data is a great way to create thoughtful questions but it may not provide the full or complete answer.
+Again, we understand that we cannot extrapolate our analysis to every city;
+however, our conclusions are generalizable to similar cities to a moderate 
+degree. Other cities with similar infrastructure and economic conditions are 
+more likely to utilize the analysis we've found — this analysis will not be
+applicable to Durham, NC, for example, because of the population density and 
+overall difference in cities (SF is a bustling city, while Durham is a smaller,
+quaint town).  
+
+If we were to continue work on the project, we would add to our analysis by 
+introducing data from different cities that are comparable to San Francisco. 
+It would be interesting to see the parallels in crime rates, as for many college
+students, traveling to their first job post-grad will be their first taste of 
+independence and financial freedom -- thus, safety is an important factor to 
+take into consideration. Ultimately, expanding the population of interest to 
+citizens in multiple cities would give a better picture of how cases of crime 
+occur differently by region, state, country, or population density (urban vs. 
+rural). Second, we would also adjust for additional potential confounding 
+variables to improve the accuracy of our analysis and models. Finally, to learn 
+more, we'd want to speak with current or past residents and police officers 
+about their first-hand local experiences with crime. Data is a great way to 
+create thoughtful questions but it may not provide the full or complete answer.
 
 
 
@@ -529,14 +706,3 @@ while-it-ranks-14439369.php.
 [7] “Current Police Districts: DataSF: City and County of San Francisco.” San 
   Francisco Data, data.sfgov.org/Public-Safety/Current-Police-Districts/wk
   hw-cjsf.
-
-
-### TO DO LIST 
-
-- t test results and analysis TINA done 
-- justifications methodology  LEAH done
-- results add coefficient interpretations KYRA & MIHIR
-- add regression model significance in discussion KYRA
-- Discussion - organize it, add conclusion TINA done
-- References - LEAH done
-- SLIDES - LEAH, TINA
